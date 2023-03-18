@@ -65,6 +65,12 @@ class Party:
 	def get_name(self):
 		return self.name
 
+	def get_power(self):
+		return self.power
+
+	def get_description(self):
+		return self.description
+
 	def travel(self, new_place):
 		self.location = new_place.get_name()
 
@@ -99,7 +105,23 @@ def other_party_movement(positions, partys, partys_names):
 
 	return 1
 
-def save_situation():
+def save_situation(party_dic):
+	with open("partys1.csv", 'w') as party:
+
+		writer = csv.writer(party)
+
+		#print(party_dic)
+
+		for x in party_dic:
+
+			row = [party_dic[x].get_name(),
+				party_dic[x].get_description(),
+				party_dic[x].get_power(),
+				party_dic[x].get_location()]
+			print(row)
+			writer.writerow(row)
+		
+
 	return 1
 
 def enter_dungeon(positions, partys, partys_names, main_party):
@@ -126,7 +148,7 @@ def enter_dungeon(positions, partys, partys_names, main_party):
 
 		print("--------------------")
 		print("--------------------")
-	
+
 
 
 def main():
@@ -154,8 +176,8 @@ def main():
 			partys_names.append(x[0])
 
 
-	enter_dungeon(position_dic, party_dic, partys_names[1:],partys_names[0])
-
+	#enter_dungeon(position_dic, party_dic, partys_names[1:],partys_names[0])
+	save_situation(party_dic)
 
 
 main()
