@@ -126,6 +126,7 @@ def enter_dungeon(positions, partys, partys_names, main_party):
 
 		print("--------------------")
 		print("--------------------")
+	
 
 
 def main():
@@ -153,6 +154,8 @@ def main():
 			partys_names.append(x[0])
 
 
-	enter_dungeon(position_dic, party_dic, partys_names[1:],partys_names[0] )
+	enter_dungeon(position_dic, party_dic, partys_names[1:],partys_names[0])
+
+
 
 main()
