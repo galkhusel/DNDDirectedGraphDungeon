@@ -1,5 +1,5 @@
 import csv
-
+import random
 class Location:
 	# esta compuesto por una lista de vertices y la recorre de forma secuencial
 	def __init__(self, name, data, power):
@@ -22,6 +22,9 @@ class Location:
 	def get_name(self):
 		return self.name
 
+	def get_names_powers(self):
+		return [self.name, self.power]
+
 class Path:
 
 	def __init__(self, origin, destination ,name, data, power):
@@ -31,16 +34,19 @@ class Path:
 		self.data = data
 		self.power = power
 
-	def show_info(self):
-		print("origin : " + self.origin + " - destination : " + self.destination)
-		print(self.data)
-		return 1
-
 	def get_connections(self):
 		return [self.origin, self.destination]
 
 	def get_name(self):
 		return self.name
+
+	def show_info(self):
+		print("origin : " + self.origin + " - destination : " + self.destination)
+		print(self.data)
+		return 1
+
+	def get_names_powers(self):
+		return [self.name, self.power]
 
 class Party:
 	def __init__(self, name, description, power, location):
@@ -52,6 +58,12 @@ class Party:
 	def show_info(self):
 		print(self.name + self.description + self.location)
 		return 1
+
+	def get_location(self):
+		return self.location
+
+	def get_name(self):
+		return self.name
 
 	def travel(self, new_place):
 		self.location = new_place.get_name()
@@ -65,21 +77,41 @@ class Party:
 
 		self.location = new_place[0]
 
-	def get_location(self):
-		return self.location
+
+def make_connection_list(positions, actual_position):
+	list_aux = list(positions[actual_position].get_connections())
+	list_connections = []
+	for x in list_aux:
+		list_connections.append(positions[x].get_names_powers())
+	return list_connections
 
 
-def enter_dungeon(positions, partys, partys_names):
+def other_party_movement(positions, partys, partys_names):
+
+	for p_name in partys_names:
+		actual_position = partys[p_name].get_location()
+		list_connections = make_connection_list(positions, actual_position)
+		partys[p_name].random_travel(list_connections)
+		
+		print(partys[p_name].get_name() + " is in " + partys[p_name].get_location())
+
+
+
+	return 1
+
+def save_situation():
+	return 1
+
+def enter_dungeon(positions, partys, partys_names, main_party):
 
 	travel = 1
 
-	main_party = partys_names[0]
 	while travel != "Quit":
 
-		position = partys[main_party].get_location()
-		lista = list(positions[position].get_connections())
+		actual_position = partys[main_party].get_location()
+		lista = list(positions[actual_position].get_connections())
 
-		positions[position].show_info()
+		positions[actual_position].show_info()
 		print("travel to where?")
 
 		travel = input()
@@ -89,6 +121,8 @@ def enter_dungeon(positions, partys, partys_names):
 			continue 
 
 		partys[main_party].travel(positions[travel])
+
+		other_party_movement(positions, partys, partys_names)
 
 		print("--------------------")
 		print("--------------------")
@@ -119,6 +153,6 @@ def main():
 			partys_names.append(x[0])
 
 
-	enter_dungeon(position_dic, party_dic, partys_names)
+	enter_dungeon(position_dic, party_dic, partys_names[1:],partys_names[0] )
 
 main()
