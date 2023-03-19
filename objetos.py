@@ -1,7 +1,22 @@
 import csv
 import random
+
+"""
+--------------------------------------------------------------------------------------------------------------
+
+Todo: 
+	in Path and Location change data to a list or dictionary to save changes made by another party
+	in Path and Location add things that can be harvested by npc to make items
+	in Party add a action variable about what can be done by them when they enter a path or a location could be harves , consume items , stash items , secure the place . etc
+	in party add a health or power meter that can changed based on what happens when someone enters a location or path they can die.
+	in party add a list of places that the have been through.
+	in party add a chaser property so the partys can chase each other.
+
+--------------------------------------------------------------------------------------------------------------
+"""
+
+#class Location would emulate Nodes in a Graph. the power variable indicates if a party can enter the Location
 class Location:
-	# esta compuesto por una lista de vertices y la recorre de forma secuencial
 	def __init__(self, name, data, power):
 		self.name = name
 		self.paths = {}
@@ -15,6 +30,7 @@ class Location:
 		return self.paths.keys()
 
 	def show_info(self):
+		print("currently in Location: " + self.name)
 		print("paths" + str(list(self.paths.keys())))
 		print(self.data)
 		return 1
@@ -26,7 +42,6 @@ class Location:
 		return [self.name, self.power]
 
 class Path:
-
 	def __init__(self, origin, destination ,name, data, power):
 		self.name = name
 		self.origin = origin
@@ -41,6 +56,7 @@ class Path:
 		return self.name
 
 	def show_info(self):
+		print("currently in path: " + self.name)
 		print("origin : " + self.origin + " - destination : " + self.destination)
 		print(self.data)
 		return 1
@@ -83,14 +99,12 @@ class Party:
 
 		self.location = new_place[0]
 
-
 def make_connection_list(positions, actual_position):
 	list_aux = list(positions[actual_position].get_connections())
 	list_connections = []
 	for x in list_aux:
 		list_connections.append(positions[x].get_names_powers())
 	return list_connections
-
 
 def other_party_movement(positions, partys, partys_names):
 
@@ -100,27 +114,22 @@ def other_party_movement(positions, partys, partys_names):
 		partys[p_name].random_travel(list_connections)
 		
 		print(partys[p_name].get_name() + " is in " + partys[p_name].get_location())
-
-
-
 	return 1
 
 def save_situation(party_dic):
-	with open("partys1.csv", 'w') as party:
+	with open("partys.csv", 'w', newline='') as party:
 
 		writer = csv.writer(party)
-
-		#print(party_dic)
-
+		print(party_dic)
 		for x in party_dic:
-
+			
 			row = [party_dic[x].get_name(),
 				party_dic[x].get_description(),
 				party_dic[x].get_power(),
 				party_dic[x].get_location()]
-			print(row)
+
 			writer.writerow(row)
-		
+
 
 	return 1
 
@@ -138,18 +147,26 @@ def enter_dungeon(positions, partys, partys_names, main_party):
 
 		travel = input()
 
-		if travel not in lista :
+		if travel not in lista and travel != "Quit" :
 			print(travel + "not found")
 			continue 
+
+		if travel == "Quit":
+			print("saving progress")
+			continue
 
 		partys[main_party].travel(positions[travel])
 
 		other_party_movement(positions, partys, partys_names)
-
 		print("--------------------")
-		print("--------------------")
+		print("--------------------")		
+		print()
+		print()
+		print()
+		print()
 
-
+		if travel == "Quit":
+			print("saving progress")
 
 def main():
 
@@ -172,12 +189,12 @@ def main():
 
 
 		for x in partys:
-			party_dic[x[0]] = Party(x[0], x[1], int(x[2]) if int(x[2]) >= 1 else '1s', x[3])
+			party_dic[x[0]] = Party(x[0], x[1], int(x[2]) if int(x[2]) >= 1 else '1s', x[3].strip())
 			partys_names.append(x[0])
 
 
-	#enter_dungeon(position_dic, party_dic, partys_names[1:],partys_names[0])
-	save_situation(party_dic)
 
+	enter_dungeon(position_dic, party_dic, partys_names[1:],partys_names[0])
+	save_situation(party_dic)
 
 main()
