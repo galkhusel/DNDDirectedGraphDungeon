@@ -196,16 +196,10 @@ def main():
 
 
 		for x in partys:
-<<<<<<< HEAD:Dungeon.py
-<<<<<<< Updated upstream:objetos.py
-			party_dic[x[0]] = Party(x[0], x[1], int(x[2]) if int(x[2]) >= 1 else '1s', x[3])
-=======
+			
 			#the strip is places in here to prevent save situation putting empty lines in the csv
 			party_dic[x[0]] = Party(x[0], x[1], int(x[2]) if int(x[2]) >= 1 else '1s', x[3].strip())
->>>>>>> Stashed changes:Dungeon.py
-=======
-			party_dic[x[0]] = Party(x[0], x[1], int(x[2]) if int(x[2]) >= 1 else '1s', x[3].strip())
->>>>>>> 8d98fd4c74b6679b4b7eb6d5960ff1c5e56daa95:objetos.py
+
 			partys_names.append(x[0])
 
 
