@@ -1,6 +1,6 @@
 import csv
 import random
-
+import datetime
 """
 ====================================================================================================
 ====================================================================================================
@@ -20,7 +20,7 @@ import random
 # when a monster party enters a Location it may rise the power value of Location by up to 3 points of the original power 
 class Location:
 	# 	def __init__(self, name, data, power : int, max_power,  objectives , status):
-	def __init__(self, name, data, power : int, max_power):
+	def __init__(self, name, data, power : int , max_power):
 		self.name = name
 		self.paths = {}
 		self.data = data
@@ -46,6 +46,14 @@ class Location:
 	def get_name(self):
 		return self.name
 
+	def get_data(self):
+		return self.data
+
+	def get_power(self):
+		return self.power
+
+	def get_max_power(self):
+		return self.max_power
 
 class Path:
 	#	def __init__(self, origin, destination ,name, data, power : int, max_power, objectives, status):
@@ -72,7 +80,16 @@ class Path:
 
 	def get_names_powers(self):
 		return [self.name, self.power]
-
+	def get_origin(self):
+		return self.origin
+	def get_destination(self):
+		return self.destination
+	def get_data(self):
+		return self.data
+	def get_power(self):
+		return self.power
+	def get_max_power(self):
+		return self.max_power
 
 class Party:
 	#def __init__(self, name, description ,power : int, location, party_composition : {} , adventurer : bool, chase : bool):	
@@ -136,18 +153,18 @@ class Party:
 """
 
 
-def build_dungeon(paths, locations, partys, main_party):
+def build_dungeon(paths, locations, partys, mainp):
 
 
 	position_dic = {}
 	party_dic = {}
 	main_party = None
 
-	with open(paths) as path, open(locations) as location, open(partys) as party, open(main_party) as mp:
+	with open(paths) as path, open(locations) as location, open(partys) as party, open(mainp) as mp:
 		paths = csv.reader(path)
 		locations = csv.reader(location)
 		partys = csv.reader(party)
-		mpartys = csv.reader(mp)
+		mparty = csv.reader(mp)
 
 		for x in locations:
 			position_dic[x[0]] = Location(
@@ -178,17 +195,19 @@ def build_dungeon(paths, locations, partys, main_party):
 			party_dic[x[0]] = Party(
 				x[0],
 				x[1],
-				int(x[2]) if int(x[2]) >= 1 else '1s',
+				int(x[2]) if int(x[2]) >= 1 else '1',
 				x[3],
 				x[4].strip()
 				)
-		for x in main_party:
-			main_party =  Party(
-				x[0],
-				x[1],
-				int(x[2]) if int(x[2]) >= 1 else '1s',
-				x[3],
-				x[4].strip()
+
+		main = next(mparty)
+
+		main_party =  Party(
+				main[0],
+				main[1],
+				int(main[2]) if int(main[2]) >= 1 else '1',
+				main[3],
+				main[4].strip()
 				)
 
 
@@ -207,12 +226,65 @@ def build_dungeon(paths, locations, partys, main_party):
 ====================================================================================================
 """
 
-def save_situation(position_dic, party_dic, main_party, pathcsv, locationcsv, partyscsv, maincsv)
+def writepath(path_object , path):
 
-	save_situation_party(party_dic, partyscsv)
+	path.writerow([
+		path_object.get_name(),
+		path_object.get_origin(),
+		path_object.get_destination(),
+		path_object.get_data(),
+		path_object.get_power(),
+		path_object.get_max_power(),
+		])
+
+def writelocation(location_object , location):
+	location.writerow([
+		location_object.get_name(),
+		location_object.get_data(),
+		location_object.get_power(),
+		location_object.get_max_power(),
+		])
+
+def save_situation_position(position_dic, pathcsv, locationcsv, date):
+
+
+	with open(pathcsv+date, 'w', newline='') as path, open(locationcsv + date, 'w', newline='') as location :
+
+		paths = csv.writer(path)
+		locations = csv.writer(location)
+
+
+		for x in main_party:
+			
+			if x is int:
+				writelocation(party_dic[x], locations)
+
+			else:
+				writepatj(party_dic[x], paths)
+
+	return 1
+
+def save_situation_main(main_party, maincsv, date):
+
+	with open(maincsv+date, 'w', newline='') as mainparty:
+
+		writer = csv.writer(mainparty)
+		print(main_party)
+		for x in main_party:
+			
+			row = [party_dic[x].get_name(),
+				party_dic[x].get_description(),
+				party_dic[x].get_power(),
+				party_dic[x].get_location(),
+				party_dic[x].get_adventurer()
+				]
+			writer.writerow(row)
+
+	return 1
 
 def save_situation_party(party_dic, partyscsv):
-	with open(partyscsv, 'w', newline='') as party:
+
+	with open(partyscsv+date, 'w', newline='') as party:
 
 		writer = csv.writer(party)
 		print(party_dic)
@@ -228,6 +300,12 @@ def save_situation_party(party_dic, partyscsv):
 
 	return 1
 
+def save_situation(position_dic, party_dic, main_party, pathcsv, locationcsv, partyscsv, maincsv):
+	date = datetime.datetime.now()
+	save_situation_party(party_dic, partyscsv, date)
+	save_situation_main(main_party, maincsv, date)
+	save_situation_position(position_dic, pathcsv, locationcsv, date)
+
 """
 ====================================================================================================
 ====================================================================================================
@@ -239,6 +317,9 @@ def save_situation_party(party_dic, partyscsv):
 ====================================================================================================
 """
 
+def adjust_power_level(positions, actual_position, party):
+	return 
+
 def make_connection_list(positions, actual_position):
 	list_aux = list(positions[actual_position].get_connections())
 	list_connections = []
@@ -246,52 +327,63 @@ def make_connection_list(positions, actual_position):
 		list_connections.append(positions[x].get_names_powers())
 	return list_connections
 
-def other_party_movement(positions, partys, partys_names):
+def other_party_movement(positions, partys):
 
-	for p_name in partys_names:
+	for p_name in partys:
 		actual_position = partys[p_name].get_location()
 		list_connections = make_connection_list(positions, actual_position)
 		partys[p_name].random_travel(list_connections)
 		
 		print(partys[p_name].get_name() + " is in " + partys[p_name].get_location())
+
+
 	return 1
 
-def main_party_travel(positions, partys, partys_names, main_party):
+def main_party_travel(positions, main_party, travel):
+
+
+
+		actual_position = main_party.get_location()
+		lista = list(positions[actual_position].get_connections())
+
+		if travel in lista:
+
+			main_party.travel(positions[travel])
+			positions[main_party.get_location()].show_info()
+
+		else:
+			print(travel + "not found")
+
+
+
+
+		
+
+def enter_dungeon(positions, partys, main_party):
+		
 	travel = 1
+
+	positions[main_party.get_location()].show_info()
+
 
 	while travel != "Quit":
 
-		actual_position = partys[main_party].get_location()
-		lista = list(positions[actual_position].get_connections())
-
-		positions[actual_position].show_info()
 		print("travel to where?")
-
+		print("enter a path or Quit")
 		travel = input()
 
-		if travel not in lista and travel != "Quit" :
-			print(travel + "not found")
-			continue 
 
-		if travel == "Quit":
-			print("saving progress")
-			continue
-
-		partys[main_party].travel(positions[travel])
-
-def enter_dungeon(positions, partys, partys_names, main_party):
-		
 		print("--------------------")
 		print("--------------------")		
 		print()
 		print()
 		print()
 		print()
+		other_party_movement(positions, partys)
+		main_party_travel(positions, main_party, travel)
 
-		other_party_movement(positions, partys, partys_names)
 
-		if travel == "Quit":
-			print("saving progress")
+
 
 
 
@@ -313,8 +405,11 @@ def main():
 
 	position_dic, party_dic, main_party = build_dungeon("paths.csv", "locations.csv", "partys.csv", "mainParty.csv")
 
+
+
 	enter_dungeon(position_dic, party_dic, main_party)
 
+	print("saving progress")
 	save_situation(position_dic, party_dic, main_party, "paths.csv", "locations.csv", "partys.csv", "mainParty.csv")
 
 main()
