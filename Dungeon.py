@@ -1,12 +1,17 @@
 import csv
 
 class Location:
+<<<<<<< Updated upstream:objetos.py
 	# esta compuesto por una lista de vertices y la recorre de forma secuencial
 	def __init__(self, name, data, power):
+=======
+	def __init__(self, name, data, power, objectives, rest):
+>>>>>>> Stashed changes:Dungeon.py
 		self.name = name
 		self.paths = {}
 		self.data = data
 		self.power = power
+		self.keys = keys
 
 	def add_path(self, path):
 		self.paths[path.name] = path
@@ -23,13 +28,19 @@ class Location:
 		return self.name
 
 class Path:
+<<<<<<< Updated upstream:objetos.py
 
 	def __init__(self, origin, destination ,name, data, power):
+=======
+	def __init__(self, origin, destination ,name, data, power, objectives, rest):
+>>>>>>> Stashed changes:Dungeon.py
 		self.name = name
 		self.origin = origin
 		self.destination = destination
 		self.data = data
 		self.power = power
+		self.keys = keys
+
 
 	def show_info(self):
 		print("origin : " + self.origin + " - destination : " + self.destination)
@@ -43,7 +54,7 @@ class Path:
 		return self.name
 
 class Party:
-	def __init__(self, name, description, power, location):
+	def __init__(self, name, description, power, location, searching objectives, rest):
 		self.name = name
 		self.description = description
 		self.power = power
@@ -94,6 +105,9 @@ def enter_dungeon(positions, partys, partys_names):
 		print("--------------------")
 
 
+
+
+
 def main():
 
 	position_dic = {}
@@ -115,7 +129,12 @@ def main():
 
 
 		for x in partys:
+<<<<<<< Updated upstream:objetos.py
 			party_dic[x[0]] = Party(x[0], x[1], int(x[2]) if int(x[2]) >= 1 else '1s', x[3])
+=======
+			#the strip is places in here to prevent save situation putting empty lines in the csv
+			party_dic[x[0]] = Party(x[0], x[1], int(x[2]) if int(x[2]) >= 1 else '1s', x[3].strip())
+>>>>>>> Stashed changes:Dungeon.py
 			partys_names.append(x[0])
 
 
