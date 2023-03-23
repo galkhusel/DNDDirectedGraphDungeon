@@ -17,20 +17,14 @@ Todo:
 
 #class Location would emulate Nodes in a Graph. the power variable indicates if a party can enter the Location
 class Location:
-<<<<<<< HEAD:Dungeon.py
-<<<<<<< Updated upstream:objetos.py
 	# esta compuesto por una lista de vertices y la recorre de forma secuencial
-=======
->>>>>>> 8d98fd4c74b6679b4b7eb6d5960ff1c5e56daa95:objetos.py
-	def __init__(self, name, data, power):
-=======
+
 	def __init__(self, name, data, power, objectives, rest):
->>>>>>> Stashed changes:Dungeon.py
 		self.name = name
 		self.paths = {}
 		self.data = data
 		self.power = power
-		self.keys = keys
+		self.objectives = objectives
 
 	def add_path(self, path):
 		self.paths[path.name] = path
@@ -47,25 +41,16 @@ class Location:
 	def get_name(self):
 		return self.name
 
-<<<<<<< HEAD:Dungeon.py
-class Path:
-<<<<<<< Updated upstream:objetos.py
-=======
-	def get_names_powers(self):
-		return [self.name, self.power]
->>>>>>> 8d98fd4c74b6679b4b7eb6d5960ff1c5e56daa95:objetos.py
+
 
 class Path:
-	def __init__(self, origin, destination ,name, data, power):
-=======
 	def __init__(self, origin, destination ,name, data, power, objectives, rest):
->>>>>>> Stashed changes:Dungeon.py
 		self.name = name
 		self.origin = origin
 		self.destination = destination
 		self.data = data
 		self.power = power
-		self.keys = keys
+		self.objectives = objectives
 
 
 	def get_connections(self):
