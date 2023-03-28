@@ -1,7 +1,7 @@
-1,2,p0,esta juani aca?,0
-2,3,p1,esta juani aca1?,1
-3,1,p2,esta juani aca2?,2
-1,3,p3,esta juani aca3?,2
-3,4,p4,esta juani aca4?,4
-4,5,p5,esta juani aca5?,4
-5,1,p6,esta juani aca6?,5
+1,2,p0,esta juani aca?,0, 3
+2,3,p1,esta juani aca1?,1, 3
+3,1,p2,esta juani aca2?,2, 3 
+1,3,p3,esta juani aca3?,2, 3
+3,4,p4,esta juani aca4?,4, 3
+4,5,p5,esta juani aca5?,4, 3 
+5,1,p6,esta juani aca6?,5, 3
