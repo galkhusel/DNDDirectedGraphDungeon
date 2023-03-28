@@ -1,6 +1,7 @@
 import csv
 import random
 import datetime
+
 """
 ====================================================================================================
 ====================================================================================================
@@ -12,15 +13,14 @@ import datetime
 ====================================================================================================
 """
 
-
-
 #class Location would emulate Nodes in a Graph. 
 #the power variable indicates if a party can enter the Location the power variable varies it goes from 0 to the original value + 3
 # when an adventurer party enters Location the power value descends by the amount of the current power lvl of the adventurers 
 # when a monster party enters a Location it may rise the power value of Location by up to 3 points of the original power 
+
 class Location:
 	# 	def __init__(self, name, data, power : int, max_power,  objectives , status):
-	def __init__(self, name, data, power : int , max_power):
+	def __init__(self, name, data, power : int , max_power : int):
 		self.name = name
 		self.paths = {}
 		self.data = data
@@ -52,18 +52,20 @@ class Location:
 	def get_power(self):
 		return self.power
 
+	def set_power(self, power):
+		self.power = power
+
 	def get_max_power(self):
 		return self.max_power
 
 class Path:
 	#	def __init__(self, origin, destination ,name, data, power : int, max_power, objectives, status):
-	def __init__(self, origin, destination ,name, data, power : int, max_power):
+	def __init__(self, origin, destination ,name, data, power : int, max_power : int):
 		self.name = name
 		self.origin = origin
 		self.destination = destination
 		self.data = data
 		self.power = power
-		self.original_power = power
 		self.max_power = max_power
 
 	def get_connections(self):
@@ -80,24 +82,32 @@ class Path:
 
 	def get_names_powers(self):
 		return [self.name, self.power]
+
 	def get_origin(self):
 		return self.origin
+
 	def get_destination(self):
 		return self.destination
+
 	def get_data(self):
 		return self.data
+
 	def get_power(self):
 		return self.power
+
+	def set_power(self, power):
+		self.power = power
+
 	def get_max_power(self):
 		return self.max_power
 
 class Party:
 	#def __init__(self, name, description ,power : int, location, party_composition : {} , adventurer : bool, chase : bool):	
-	def __init__(self, name, description ,power : int, location, adventurer : bool):
+	def __init__(self, name, description ,power : int, max_power:int , location, adventurer : bool):
 		self.name = name
 		self.description = description
 		self.power = power
-		self.original_power = power
+		self.max_power = max_power
 		self.location = location
 		self.objectives = {}
 		self.adventurer = adventurer
@@ -124,22 +134,46 @@ class Party:
 		return self.adventurer
 
 	def travel(self, new_place):
+		print("travel")
 		self.location = new_place.get_name()
 
 	def random_travel(self, places):
         
-		amount_places = len(places)
+		print("random_travel")
 
-		new_place = random.choice(places)
-		aux_places = 1
+		if self.location.isdigit():
 
-		while new_place[1] >> self.power and aux_places << amount_places:
+			amount_places = len(places)
+
 			new_place = random.choice(places)
-			aux_places += 1
+			aux_places = 0
 
-		if aux_places << amount_places:
-			self.location = new_place[0]
+			
 
+			while new_place[1] >> self.power and aux_places << amount_places:
+				new_place = random.choice(places)
+				aux_places += 1
+				print()
+
+			if aux_places << amount_places:
+				self.location = new_place[0]
+
+			elif self.power << self.max_power:
+				self.power += 1
+			else:
+				self.power -= 1
+
+		else:
+			if places[1][1] <= (self.power-1):
+				self.power -= 1
+				self.location = places[1][0]
+
+			elif self.power << self.max_power:
+				self.power += 1
+
+			else :
+				self.power -= 1
+				self.location = places[0][0]
 """
 ====================================================================================================
 ====================================================================================================
@@ -152,9 +186,7 @@ class Party:
 ====================================================================================================
 """
 
-
 def build_dungeon(paths, locations, partys, mainp):
-
 
 	position_dic = {}
 	party_dic = {}
@@ -168,52 +200,50 @@ def build_dungeon(paths, locations, partys, mainp):
 
 		for x in locations:
 			position_dic[x[0]] = Location(
-				x[0],
-				x[1],
-				int(x[2]) if int(x[2]) >= 0 else 0,
-				int(x[3]) if int(x[3]) >= 0 else int(x[2]) if int(x[2]) >= 0 else 0 
+				name = x[0],
+				data = x[1],
+				power = int(x[2]) if int(x[2]) >= 0 else 0, 
+				max_power = int(x[3]) if int(x[3]) >= 0 else int(x[2]) if int(x[2]) >= 0 else 0,				
 				)
 
 		for x in paths:
 			p = Path(
-				x[0],
-				x[1],
-				x[2],
-				x[3],
-				int(x[4]) if int(x[4]) >= 0 else 0,
-				int(x[5]) if int(x[5]) >= 0 else int(x[4]) if int(x[4]) >= 0 else 0
-				)
 
+				origin = x[0],
+				destination = x[1],
+				name = x[2],
+				data = x[3],
+				power = int(x[4]) if int(x[4]) >= 0 else 0,
+				max_power = int(x[5]) if int(x[5]) >= 0 else int(x[4]) if int(x[4]) >= 0 else 0
+				)
 
 			position_dic[p.name] = p
 			position_dic[p.origin].add_path(p)
-
 
 		for x in partys:
 			
 			#the strip is places in here to prevent save situation putting empty lines in the csv
 			party_dic[x[0]] = Party(
-				x[0],
-				x[1],
-				int(x[2]) if int(x[2]) >= 1 else '1',
-				x[3],
-				x[4].strip()
+				name = x[0],
+				description = x[1],
+				power = int(x[2]) if int(x[2]) >= 1 else '1',
+				max_power = int(x[3]) if int(x[3]) >= 0 else int(x[2]) if int(x[2]) >= 0 else 1,
+				location = x[4],
+				adventurer = x[5].strip()
 				)
 
 		main = next(mparty)
 
 		main_party =  Party(
-				main[0],
-				main[1],
-				int(main[2]) if int(main[2]) >= 1 else '1',
-				main[3],
-				main[4].strip()
+				name = main[0],
+				description = main[1],
+				power = 999,
+				max_power = 999,
+				location = main[2],
+				adventurer = main[3].strip()
 				)
-
-
-
+		print(main_party.get_location())
 	return position_dic, party_dic, main_party
-
 
 """
 ====================================================================================================
@@ -238,6 +268,7 @@ def writepath(path_object , path):
 		])
 
 def writelocation(location_object , location):
+	
 	location.writerow([
 		location_object.get_name(),
 		location_object.get_data(),
@@ -247,44 +278,43 @@ def writelocation(location_object , location):
 
 def save_situation_position(position_dic, pathcsv, locationcsv, date):
 
-
-	with open(pathcsv+date, 'w', newline='') as path, open(locationcsv + date, 'w', newline='') as location :
+	with open(date+pathcsv, 'a', newline='') as path, open(date+locationcsv, 'w', newline='') as location :
 
 		paths = csv.writer(path)
 		locations = csv.writer(location)
 
 
-		for x in main_party:
+		for x in position_dic:
 			
-			if x is int:
-				writelocation(party_dic[x], locations)
+			if x.isdigit():
+				writelocation(position_dic[x], locations)
 
 			else:
-				writepatj(party_dic[x], paths)
+				print(x)
+				writepath(position_dic[x], paths)
 
 	return 1
 
 def save_situation_main(main_party, maincsv, date):
 
-	with open(maincsv+date, 'w', newline='') as mainparty:
+	with open(date+maincsv, 'a', newline='') as mainparty:
 
 		writer = csv.writer(mainparty)
 		print(main_party)
-		for x in main_party:
 			
-			row = [party_dic[x].get_name(),
-				party_dic[x].get_description(),
-				party_dic[x].get_power(),
-				party_dic[x].get_location(),
-				party_dic[x].get_adventurer()
-				]
-			writer.writerow(row)
+		row = [main_party.get_name(),
+			main_party.get_description(),
+			main_party.get_power(),
+			main_party.get_location(),
+			main_party.get_adventurer()
+			]
+		writer.writerow(row)
 
 	return 1
 
-def save_situation_party(party_dic, partyscsv):
+def save_situation_party(party_dic, partyscsv, date):
 
-	with open(partyscsv+date, 'w', newline='') as party:
+	with open(date+partyscsv, 'a', newline='') as party:
 
 		writer = csv.writer(party)
 		print(party_dic)
@@ -301,9 +331,10 @@ def save_situation_party(party_dic, partyscsv):
 	return 1
 
 def save_situation(position_dic, party_dic, main_party, pathcsv, locationcsv, partyscsv, maincsv):
-	date = datetime.datetime.now()
-	save_situation_party(party_dic, partyscsv, date)
+
+	date = str(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M'))
 	save_situation_main(main_party, maincsv, date)
+	save_situation_party(party_dic, partyscsv, date)
 	save_situation_position(position_dic, pathcsv, locationcsv, date)
 
 """
@@ -318,9 +349,18 @@ def save_situation(position_dic, party_dic, main_party, pathcsv, locationcsv, pa
 """
 
 def adjust_power_level(positions, actual_position, party):
-	return 
+	print("power_level")
+	if party.get_adventurer() == True:
+		positions[actual_position].set_power(True, 1)
+
+	elif party.get_adventurer() == False:
+		positions[actual_position].set_power(False, 1)
+
+
+	return
 
 def make_connection_list(positions, actual_position):
+	print("make_connection_list")
 	list_aux = list(positions[actual_position].get_connections())
 	list_connections = []
 	for x in list_aux:
@@ -328,50 +368,42 @@ def make_connection_list(positions, actual_position):
 	return list_connections
 
 def other_party_movement(positions, partys):
-
+	print("other_party_movement")
 	for p_name in partys:
 		actual_position = partys[p_name].get_location()
 		list_connections = make_connection_list(positions, actual_position)
 		partys[p_name].random_travel(list_connections)
-		
-		print(partys[p_name].get_name() + " is in " + partys[p_name].get_location())
-
+		print(partys[p_name].get_name() + partys[p_name].get_power() + " is in " + partys[p_name].get_location() + "its power is ")
 
 	return 1
 
 def main_party_travel(positions, main_party, travel):
+	print("main_party_travel")
+	actual_position = main_party.get_location()
+	lista = list(positions[actual_position].get_connections())
 
 
 
-		actual_position = main_party.get_location()
-		lista = list(positions[actual_position].get_connections())
+	if travel in lista:
 
-		if travel in lista:
+		main_party.travel(positions[travel]) 
 
-			main_party.travel(positions[travel])
-			positions[main_party.get_location()].show_info()
-
-		else:
-			print(travel + "not found")
-
-
-
-
-		
+	else:
+		print(travel + "not found")
 
 def enter_dungeon(positions, partys, main_party):
 		
 	travel = 1
 
-	positions[main_party.get_location()].show_info()
-
-
 	while travel != "Quit":
 
+		positions[main_party.get_location()].show_info()
 		print("travel to where?")
 		print("enter a path or Quit")
 		travel = input()
 
+		if travel == "Quit":
+			break
 
 		print("--------------------")
 		print("--------------------")		
@@ -381,11 +413,6 @@ def enter_dungeon(positions, partys, main_party):
 		print()
 		other_party_movement(positions, partys)
 		main_party_travel(positions, main_party, travel)
-
-
-
-
-
 
 """
 ====================================================================================================
@@ -400,16 +427,9 @@ def enter_dungeon(positions, partys, main_party):
 
 def main():
 
-
-
-
 	position_dic, party_dic, main_party = build_dungeon("paths.csv", "locations.csv", "partys.csv", "mainParty.csv")
-
-
 
 	enter_dungeon(position_dic, party_dic, main_party)
 
 	print("saving progress")
 	save_situation(position_dic, party_dic, main_party, "paths.csv", "locations.csv", "partys.csv", "mainParty.csv")
-
-main()
