@@ -1,6 +1,4 @@
-import csv
 import random
-import datetime
 
 from Classes import Path, Location, Party, Adventurers
 from ManageCSV import build_dungeon, save_situation
@@ -195,9 +193,24 @@ def enter_dungeon(positions, partys, main_party):
 
 def main():
 
-	position_dic, party_dic, main_party = build_dungeon("paths.csv", "locations.csv", "partys.csv", "mainParty.csv")
+	position_dic, party_dic, main_party = build_dungeon("paths.csv", 
+														"locations.csv", 
+														"partys.csv", 
+														"mainParty.csv", 
+														"adventurers.csv")
 
-	enter_dungeon(position_dic, party_dic, main_party)
+	enter_dungeon(	position_dic, 
+					party_dic, 
+					main_party)
 
 	print("saving progress")
-	save_situation(position_dic, party_dic, main_party, "paths.csv", "locations.csv", "partys.csv", "mainParty.csv")
+	save_situation(	position_dic, 
+					party_dic, main_party, 
+					"paths.csv", 
+					"locations.csv", 
+					"partys.csv", 
+					"mainParty.csv", 
+					"adventurers.csv")
+
+if __name__ == '__main__':
+	main()
