@@ -11,11 +11,6 @@ import random
 ====================================================================================================
 """
 
-#class Location would emulate Nodes in a Graph. 
-#the power variable indicates if a party can enter the Location the power variable varies it goes from 0 to the original value + 3
-# when an adventurer party enters Location the power value descends by the amount of the current power lvl of the adventurers 
-# when a monster party enters a Location it may rise the power value of Location by up to 3 points of the original power 
-
 class Location:
 	# status indicates the condition of the path depending on the power of the path its a dic
 	# 	def __init__(objectives, status):
@@ -69,12 +64,6 @@ class Location:
 		else:
 			for x in deads:
 				self.status[deads].append(x)
-
-
-#class Location would emulate Nodes in a Graph. 
-#the power variable indicates if a party can enter the Location the power variable varies it goes from 0 to the original value + 3
-# when an adventurer party enters Location the power value descends by the amount of the current power lvl of the adventurers 
-# when a monster party enters a Location it may rise the power value of Location by up to 3 points of the original power 
 
 class Path:
 	#status indicates the condition of the path depending on the power of the path its a dic
@@ -171,7 +160,7 @@ class Adventurers:
 class Party:
 	#status indicate which party member are alive and their conditions, also the party inventory its a dic
 	#def __init__(, objectives, chase, graph, status):	
-	def __init__(self, name, description ,power : int, max_power:int , location, side : bool, adventurers, alive):
+	def __init__(self, name, description ,power : int, max_power:int , location, side : bool, alive):
 		self.name = name
 		self.description = description
 		self.power = power
@@ -179,10 +168,16 @@ class Party:
 		self.location = location
 		self.objectives = {}
 		self.side = side
-		self.adventurers = adventurers
+		self.adventurers = {}
 		self.paths = []
 		self.alive = alive
 
+	def add_adventurer(self, adventurer):
+		self.adventurers[adventurer.get_name()] = adventurer
+
+	def get_adventurers(self):
+		return self.adventurers
+		
 	def show_info(self):
 		print(self.name + self.description + self.location)
 		return 1
