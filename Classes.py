@@ -65,6 +65,9 @@ class Location:
 			for x in deads:
 				self.status[deads].append(x)
 
+	def get_status(self):
+		return self.status
+
 class Path:
 	#status indicates the condition of the path depending on the power of the path its a dic
 	#	def __init__(objectives, status):
@@ -122,6 +125,9 @@ class Path:
 			for x in deads:
 				self.status["deads"].append(x)
 
+	def get_status(self):
+		return self.status
+
 class Adventurers:
 	def __init__(self, name, health, max_health,  status, alive):
 		self.name = name
@@ -138,6 +144,9 @@ class Adventurers:
 
 	def get_status(self):
 		return self.status
+
+	def get_max_health(self):
+		return self.max_health
 
 	def get_alive(self):
 		return self.alive
@@ -166,17 +175,16 @@ class Party:
 		self.power = power
 		self.max_power = max_power
 		self.location = location
-		self.objectives = {}
 		self.side = side
-		self.adventurers = {}
-		self.paths = []
 		self.alive = alive
+
+		self.adventurers = {}
+
+		self.objectives = {}
+		self.paths = []
 
 	def add_adventurer(self, adventurer):
 		self.adventurers[adventurer.get_name()] = adventurer
-
-	def get_adventurers(self):
-		return self.adventurers
 		
 	def show_info(self):
 		print(self.name + self.description + self.location)
@@ -190,6 +198,9 @@ class Party:
 
 	def get_power(self):
 		return self.power
+
+	def get_max_power(self):
+		return self.max_power
 
 	def get_description(self):
 		return self.description

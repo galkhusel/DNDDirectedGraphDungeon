@@ -193,24 +193,30 @@ def enter_dungeon(positions, partys, main_party):
 
 def main():
 
-	position_dic, party_dic, main_party = build_dungeon("paths.csv", 
+	position_dic, party_dic, main_party = build_dungeon(
+														"paths.csv", 
 														"locations.csv", 
 														"partys.csv", 
 														"mainParty.csv", 
-														"adventurers.csv")
+														"adventurers.csv",
+														"items.json")
 
-	enter_dungeon(	position_dic, 
-					party_dic, 
-					main_party)
+	enter_dungeon(
+				position_dic, 
+				party_dic, 
+				main_party)
 
 	print("saving progress")
-	save_situation(	position_dic, 
-					party_dic, main_party, 
+	save_situation(
+					position_dic, 
+					party_dic, 
+					main_party, 
 					"paths.csv", 
 					"locations.csv", 
 					"partys.csv", 
 					"mainParty.csv", 
-					"adventurers.csv")
+					"adventurers.csv",
+					"items.json")
 
 if __name__ == '__main__':
 	main()
