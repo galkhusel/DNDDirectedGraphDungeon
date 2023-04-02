@@ -73,9 +73,10 @@ def main_party_travel(positions, main_party, travel):
 	else:
 		print(travel + "not found")
 
-#refactor from here
 def apply_damage(partys, damage):
 	
+	# add how much damage main party can do
+
 	dead = []
 	amount_partys = len(partys)
 	counter_dead_partys = 0
@@ -94,7 +95,7 @@ def apply_damage(partys, damage):
 
 	return dead
 
-def calculate_outcome(partys, position_power):
+def create_party_lists(partys):
 
 	allies = 0
 	allies_list = []
@@ -102,6 +103,7 @@ def calculate_outcome(partys, position_power):
 	enemies = 0
 	enemies_list = []
 
+	neutral_list = []
 	neutral = 0
 
 
@@ -115,46 +117,116 @@ def calculate_outcome(partys, position_power):
 			enemies_list.append(x)
 
 		elif position.power > 0:
+			neutral_list.append(x)
 			neutral += x.get_power()
 
+	return {"allies" :  (allies_list, allies),
+			"enemies":	(enemies_list, enemies),
+			"neutral":	(neutral_list, neutral),
+	}
 
-	return allies - enemies - position_power + neutral
+def calculate_outcome(partys, position_power):
+
+	return partys[allies][1] - partys[enemies][1] - position_power + partys[neutral][1]
 
 def confrontation(partys, position_power):
 
+
+	#divide in if has main party or not
+
 	dead = []
 
-	outcome = calculate_outcome(partys, position_power)
+	partys_by_relationships = create_party_lists(partys)
+
+	outcome = calculate_outcome(partys_by_relationships, position_power)
 
 	damage = sqrt(outcome**2)
 
 	if allies != 0 or enemies != 0:
 		if outcome < 0:
-			dead.append(apply_damage(allies_list, damage))
+			dead.append(apply_damage(partys_by_relationships["allies"][0], damage))
 
 		if outcome > 0:
-			dead.append(apply_damage(enemies_list, damage))
+			dead.append(apply_damage(partys_by_relationships["enemies"][0], damage))
 
 	return dead
 
-def calculate_status(positions, partys):
+
+def main_party_encounters(party):
+
+
+	resolution = 1
+
+	while resolution != "Finish":
+
+
+
+		positions[main_party.get_location()].show_info()
+		print("travel to where?")
+		print("enter a path or Quit")
+		travel = input()
+
+		if resolution == "kill":
+
+			party[input()].set_alive(False)
+
+		if resolution == "restore":
+
+			party[input()].set_alive(True)
+
+		if resolution == "run"
+
+			#chase?
+
+		if resolution == "enemies run"
+
+			#enemies move
+		
+		if resolution == "change sides"
+
+			value = input()
+
+			if value != "True" or value != "False"
+
+				party[input()].set_side(ast.literal_eval(value))
+			else:
+				party[input()].set_side("")
+		
+		if resolution == "logg"
+
+			#logg input
+
+
+
+
+def calculate_status(positions, main_party, partys):
 	
 	encounters = {}
 	deads = []
 
 
+	# add main party to confrontations
+
+	encounters[main_party.get_location()] = [main_party.get_name()]
+
 	for x in partys:
 		if partys[x].get_location() not in encounters:
-			encounters[partys[x].get_location()] = [partys[x].get_name()]
+			encounters[partys[x].get_location()] = partys[x]
 		else:
-			encounters[partys[x].get_location()].append(partys[x].get_name())
+			encounters[partys[x].get_location()].append(partys[x])
+
+
 
 	for x in encounters:
 		if len(encounters[x]) > 1:
-			deads = confrontation([partys[key] for key in encounters[x] ] , position[x].get_power())
-			positions[x].add_deads(deads)
+			if main_party.get_name() not in encounters[x]:
+				deads = confrontation([partys[key] for key in encounters[x]] , position[x].get_power())
+				positions[x].add_deads(deads)
 
-#to here after making unit tests
+			else:
+				deads = main_party_confrontation(party)
+
+
 
 def enter_dungeon(positions, partys, main_party):
 		
@@ -178,7 +250,7 @@ def enter_dungeon(positions, partys, main_party):
 		print()
 		other_party_movement(positions, partys)
 		main_party_travel(positions, main_party, travel)
-		calculate_status(partys, positions)
+		calculate_status(partys, main_party , positions)
 
 """
 ====================================================================================================

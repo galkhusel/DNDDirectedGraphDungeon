@@ -211,6 +211,9 @@ class Party:
 	def get_alive(self):
 		return self.alive
 
+	def set_alive(self, alive):
+		self.alive = alive
+
 	def get_adventurers(self):
 		return self.adventurers
 
