@@ -106,8 +106,10 @@ class TestParty(unittest.TestCase):
         self.adventurer1 = Adventurers("tannae", 85, 999, {"gear" : ["magic", "items"], "consumables" : ["potions", "scrolls"], "common" : ["backpack"], "crafting" : {"herbs" : 4, "ore" : 5}} ,True)
         self.adventurer2 = Adventurers("tannae2", 85, 999, {"gear" : ["magic", "items"], "consumables" : ["potions", "scrolls"], "common" : ["backpack"], "crafting" : {"herbs" : 4, "ore" : 5}} ,True)
         self.location = Location('1', 'starting location', 5, 8, {10:"sarasa", 11:"sarasa111111"})
-        self.adv = {self.adventurer1.get_name(): self.adventurer1, self.adventurer2.get_name() : self.adventurer2}
-        self.party = Party("Party 1", "Some description", 5, 7, "1" , True, self.adv, True)
+        self.party = Party("Party 1", "Some description", 5, 7, "1" , True, True)
+        self.party.add_adventurer(self.adventurer1)
+        self.party.add_adventurer(self.adventurer2)
+
 
     def test_get_location(self):
         self.assertEqual(self.party.get_location(), "1")

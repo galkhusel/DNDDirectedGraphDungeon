@@ -15,15 +15,15 @@ from Classes import Path, Location, Party, Adventurers
 ====================================================================================================					
 ====================================================================================================
 """
-def build_location(pathscsv, locationscsv):
+def build_location(pathscsv, locationscsv, statusjson):
 
 	position_dic = {}
 
-	with open(pathscsv) as path, open(locationscsv) as location:
+	with open(pathscsv) as path, open(locationscsv) as location, open (statusjson) as sj:
 
 		paths = csv.reader(path)
 		locations = csv.reader(location)
-
+		status = json.load(sj)
 
 		for x in locations:
 			if len(x) > 0 :
@@ -32,7 +32,6 @@ def build_location(pathscsv, locationscsv):
 					data = x[1],
 					power = int(x[2]) if int(x[2]) >= 0 else 0, 
 					max_power = int(x[3]) if int(x[3]) >= 0 else int(x[2]) if int(x[2]) >= 0 else 0,
-					status = x[4].strip()
 					)
 
 		for x in paths:
@@ -45,11 +44,17 @@ def build_location(pathscsv, locationscsv):
 					data = x[3],
 					power = int(x[4]) if int(x[4]) >= 0 else 0,
 					max_power = int(x[5]) if int(x[5]) >= 0 else int(x[4]) if int(x[4]) >= 0 else 0,
-					status = x[6].strip()
 					)
 
-			position_dic[p.name] = p
-			position_dic[p.origin].add_path(p)
+			position_dic[p.get_name()] = p
+			position_dic[p.get_origin()].add_path(p)
+
+
+
+		for x in position_dic:
+			if x in status:
+				position_dic[x].set_status(status[x])
+
 
 	return position_dic
 
@@ -110,9 +115,9 @@ def build_partys(partyscsv, mainpcsv, adventurerscsv, itemsjson):
 
 	return party_dic, main_party
 
-def build_dungeon(paths, locations, partys, mainp, Adventurers, items):
+def build_dungeon(paths, locations, partys, mainp, Adventurers, items, statusjson):
 
-	position_dic = build_location(paths, locations)
+	position_dic = build_location(paths, locations, statusjson)
 
 	party_dic, main_party = build_partys(partys, mainp, Adventurers, items)
 
@@ -129,7 +134,20 @@ def build_dungeon(paths, locations, partys, mainp, Adventurers, items):
 ====================================================================================================
 """
 
+def save_situation_status(position_dic, party_dic, statusjson, date):
+	with open(date+statusjson, 'a', newline='') as status:
+
+		dic = {}
+
+		for x in position_dic:
+			dic[x] = position_dic[x].get_status()
+
+		json.dump(dic, status)
+
+
+
 def save_situation_adventurers(party_dic, adventurerscsv, itemsjson, date):
+
 
 	with open(date+adventurerscsv, 'a', newline='') as party,  open(date+itemsjson, 'a', newline='') as items:
 
@@ -240,9 +258,10 @@ def save_situation_position(position_dic, pathcsv, locationcsv, date):
 
 	return 1
 
-def save_situation(position_dic, party_dic, main_party, pathcsv, locationcsv, partyscsv, maincsv, adventurerscsv, itemsjson):
+def save_situation(position_dic, party_dic, main_party, pathcsv, locationcsv, partyscsv, maincsv, adventurerscsv, itemsjson, statusjson):
 
 	date = str(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M'))
+	save_situation_status(position_dic, party_dic, statusjson, date)
 	save_situation_adventurers(party_dic, adventurerscsv, itemsjson, date)
 	save_situation_main(main_party, maincsv, date)
 	save_situation_party(party_dic, partyscsv, date)
