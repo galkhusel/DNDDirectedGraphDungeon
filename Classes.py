@@ -23,6 +23,7 @@ class Location:
 		self.max_power = max_power
 		#self.objectives = objectives
 		self.status = {}
+		self.last_status = None
 
 	def add_path(self, path):
 		self.paths[path.name] = path
@@ -34,6 +35,10 @@ class Location:
 		print("currently in Location: " + self.name)
 		print("paths" + str(list(self.paths.keys())))
 		print(self.data)
+		if self.power in self.status:
+			print(self.status[self.power])
+		else:
+			print(self.last_status)
 		return 1
 
 	def get_names_powers(self):
@@ -49,25 +54,32 @@ class Location:
 		return self.power
 
 	def set_power(self,boolean, power):
+		
 		if boolean != None:
 			if boolean:
 				self.power -= power
 			if not boolean:
 				self.power += power
 
+		print(self.status)
+		if self.power in self.status:
+			self.last_status = self.status[self.power]
+		print(self.power)
+
 	def get_max_power(self):
 		return self.max_power
 
 	def add_deads(self, deads):
 
-		print(self.status)
 		if "deads" not in self.status:
 			self.status["deads"] = deads
 		else:
 			for x in deads:
 				self.status["deads"].append(x)
+
 	def get_status(self):
 		return self.status
+
 	def set_status(self, statusl):
 		if self.status == {}:
 			self.status = statusl
@@ -121,11 +133,16 @@ class Path:
 			if not boolean:
 				self.power += power
 
+		print(self.status)
+		if self.power in self.status:
+			self.last_status = self.status[self.power]
+		print(self.power)
+
 	def get_max_power(self):
 		return self.max_power
 
 	def add_deads(self, deads):
-		print(self.status)
+
 		if "deads" not in self.status:
 			self.status["deads"] = deads
 		else:
@@ -141,7 +158,6 @@ class Path:
 		else:
 			for x in statusl:
 				self.status[x] = statusl[x] 
-
 
 class Adventurers:
 	def __init__(self, name, health, max_health,  status, alive):
@@ -225,7 +241,6 @@ class Party:
 
 	def set_side(self):
 		self.side = side
-
 
 	def get_alive(self):
 		return self.alive

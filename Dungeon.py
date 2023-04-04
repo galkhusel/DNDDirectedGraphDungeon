@@ -4,6 +4,10 @@ from Classes import Path, Location, Party, Adventurers
 from ManageCSV import build_dungeon, save_situation
 from History import dungeon_crawl_logger
 
+import os
+import ast
+
+
 """
 ====================================================================================================
 ====================================================================================================
@@ -17,20 +21,28 @@ from History import dungeon_crawl_logger
 
 #adjust the power level by 1 depending if the party is allied or enemy , if neutral skips
 def adjust_power_level(position, party):
-	print("power_level")
-	if party.get_adventurers() != None:
-		if party.get_adventurers() == True:
+	
+	print(party.get_side())
+
+	if party.get_side() != None:
+		print( "entreeeeee")
+		if party.get_side() == True:
+	
+			print("getside true")
+
 			position.set_power(True, 1)
 
-		elif party.get_adventurers() == False:
-			position.set_power(False, 1)
+		elif party.get_side() == False:
 
+			print("getside false")
+
+			position.set_power(False, 1)
 
 	return
 
 # this function returns where the parties can move
 def make_connection_list(positions, actual_position):
-	print("make_connection_list")
+
 	list_aux = list(positions[actual_position].get_connections())
 	list_connections = []
 	for x in list_aux:
@@ -39,7 +51,6 @@ def make_connection_list(positions, actual_position):
 
 # all other parties tries to move to an adjacent place. if they can move it adjust the power level of that place accordingly
 def other_party_movement(positions, partys):
-	print("other_party_movement")
 
 	for p_name in partys:
 		if not partys[p_name].get_alive(): continue
@@ -52,14 +63,14 @@ def other_party_movement(positions, partys):
 		#adjusting power level of location
 		actual_location = positions[partys[p_name].get_location()]
 		adjust_power_level(actual_location, partys[p_name])
-
-		print(partys[p_name].get_name()  + " is in " + partys[p_name].get_location() + " its power is " + str(partys[p_name].get_power()))
+		####################
+		#print(partys[p_name].get_name()  + " is in " + partys[p_name].get_location() + " its power is " + str(partys[p_name].get_power()))
 
 	return 1
 
 # party tries to move to an adjacent place if it can move it adjust the power level of that place 
 def main_party_travel(positions, main_party, travel):
-	print("main_party_travel")
+
 	actual_position = main_party.get_location()
 	list_ = list(positions[actual_position].get_connections())
 
@@ -163,6 +174,7 @@ def main_party_encounters(party):
 		print("enter a resolution : Finish, kill, restore, change-sides, logg")
 
 		resolution = input()
+
 		if resolution == "Finish":
 			continue
 
@@ -170,27 +182,22 @@ def main_party_encounters(party):
 		print(party)
 		party_input = input()
 		
-		if not party_input.isdigit():
+		if  party_input not in party:
 			continue
 
-		party_input = int(party_input)
-
-
 		if resolution == "kill":
-
-			party[(input())].set_alive(False)
+			party[party_input].set_alive(False)
 
 
 		elif resolution == "restore":
+			party[party_input].set_alive(True)
 
-			party[input()].set_alive(True)
 
 		elif resolution == "run":
 			print(resolution)
 			#chase?
 
 		elif resolution == "enemies run":
-
 			print(resolution)
 		
 		elif resolution == "change-sides":
@@ -199,23 +206,25 @@ def main_party_encounters(party):
 
 			if value != "True" or value != "False":
 
-				party[input()].set_side(ast.literal_eval(value))
+				party[party_input].set_side(ast.literal_eval(value))
 			else:
-				party[input()].set_side("")
-		
-		elif resolution == "logg":
+				party[party_input].set_side("")
 
-			print(resolution)
+		elif resolution == "logg":
+			print("logging")
+			dungeon_crawl_logger(input())
+
 
 def calculate_status(positions, main_party, partys):
 	
 	encounters = {}
 	deads = []
 
-	print(partys)
+
 	# add main party to confrontations
 
 	encounters[main_party.get_location()] = {main_party.get_name(): main_party}
+
 	for x in partys:
 		position = partys[x].get_location()
 		if position in encounters:
@@ -225,12 +234,11 @@ def calculate_status(positions, main_party, partys):
 			encounters[position] = {partys[x].get_name() : partys[x]}
 
 
-	print(encounters)
+
 
 	for x in encounters:
 		if len(encounters[x]) > 1:
 
-			print(x)
 
 			if main_party.get_name() not in encounters[x]:
 				deads = confrontation([partys[key] for key in encounters[x]] , positions[x].get_power())
@@ -238,7 +246,6 @@ def calculate_status(positions, main_party, partys):
 
 			else:
 				deads = main_party_encounters(encounters[x])
-
 
 
 def enter_dungeon(positions, partys, main_party):
@@ -251,6 +258,8 @@ def enter_dungeon(positions, partys, main_party):
 		print("travel to where?")
 		print("enter a path or Quit")
 		travel = input()
+
+
 
 		if travel == "Quit":
 			break
