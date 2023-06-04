@@ -8,16 +8,16 @@ from Classes import Path, Location, Party, Adventurers
 class TestLocation(unittest.TestCase):
     
     def setUp(self):
-        self.location = Location('1', 'starting location', 10, 20, {10:"sarasa", 11:"sarasa111111"})
+        self.location = Location('1', 'starting location', 10, 20)
         
     def test_add_path(self):
-        path = Path('start', 'end', 'path', 'path between start and end', 5, 15,  {10:"sarasa", 11:"sarasa111111"})
+        path = Path('start', 'end', 'path', 'path between start and end', 5, 15)
         self.location.add_path(path)
         self.assertIn('path', self.location.paths)
         
     def test_get_connections(self):
-        path1 = Path('start', 'end1', 'path1', 'path between start and end1', 5, 15,  {10:"sarasa", 11:"sarasa111111"})
-        path2 = Path('start', 'end2', 'path2', 'path between start and end2', 7, 18,  {10:"sarasa", 11:"sarasa111111"})
+        path1 = Path('start', 'end1', 'path1', 'path between start and end1', 5, 15)
+        path2 = Path('start', 'end2', 'path2', 'path between start and end2', 7, 18)
         self.location.add_path(path1)
         self.location.add_path(path2)
         self.assertCountEqual(['path1', 'path2'], self.location.get_connections())
@@ -52,7 +52,7 @@ class TestLocation(unittest.TestCase):
 class TestPath(unittest.TestCase):
     
     def setUp(self):
-        self.path = Path('start', 'end', 'path', 'path between start and end', 5, 15, {10:"sarasa", 11:"sarasa111111"})
+        self.path = Path('start', 'end', 'path', 'path between start and end', 5, 15)
         
     def test_get_connections(self):
         self.assertCountEqual(['start', 'end'], self.path.get_connections())
@@ -105,9 +105,11 @@ class TestParty(unittest.TestCase):
     def setUp(self):
         self.adventurer1 = Adventurers("tannae", 85, 999, {"gear" : ["magic", "items"], "consumables" : ["potions", "scrolls"], "common" : ["backpack"], "crafting" : {"herbs" : 4, "ore" : 5}} ,True)
         self.adventurer2 = Adventurers("tannae2", 85, 999, {"gear" : ["magic", "items"], "consumables" : ["potions", "scrolls"], "common" : ["backpack"], "crafting" : {"herbs" : 4, "ore" : 5}} ,True)
-        self.location = Location('1', 'starting location', 5, 8, {10:"sarasa", 11:"sarasa111111"})
-        self.adv = {self.adventurer1.get_name(): self.adventurer1, self.adventurer2.get_name() : self.adventurer2}
-        self.party = Party("Party 1", "Some description", 5, 7, "1" , True, self.adv, True)
+        self.location = Location('1', 'starting location', 5, 8)
+        self.party = Party("Party 1", "Some description", 5, 7, "1" , True, True)
+        self.party.add_adventurer(self.adventurer1)
+        self.party.add_adventurer(self.adventurer2)
+
 
     def test_get_location(self):
         self.assertEqual(self.party.get_location(), "1")
@@ -125,7 +127,7 @@ class TestParty(unittest.TestCase):
         self.assertEqual(self.party.get_side(), True)
 
     def test_travel(self):
-        self.new_location = Location("2", "Some data", 6, 12, {10:"sarasa", 11:"sarasa111111"})
+        self.new_location = Location("2", "Some data", 6, 12)
         self.party.travel(self.new_location)
         self.assertEqual(self.party.get_location(), "2")
 
