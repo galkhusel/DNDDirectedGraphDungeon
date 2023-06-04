@@ -35,11 +35,11 @@ class Location:
 		print("currently in Location: " + self.name)
 		print("paths" + str(list(self.paths.keys())))
 		print(self.data)
-		if self.power in self.status:
-			print(self.status[self.power])
-		else:
-			print(self.last_status)
-		return 1
+		#if self.power in self.status:
+		#	print(self.status[self.power])
+		#else:
+		#	print(self.last_status)
+		#return 1
 
 	def get_names_powers(self):
 		return [self.name, self.power]
