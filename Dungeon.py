@@ -85,54 +85,79 @@ def calculate_outcome(partys, position_power):
 
 	return partys["allies"][1] - partys["enemies"][1] - position_power + partys["neutral"][1]
 
-def main_party_encounters(party):
+def main_party_encounters(encounter, partys, main_party):
 
 	resolution = 1
 
+	print(encounter)
+
 	while resolution != "Finish":
 
-		print("enter a resolution : Finish, kill, revive, change-sides, logg")
+		print("enter a resolution : Finish, kill, revive, change-sides, join_group, remove_group, logg")
 
 		resolution = input()
 
 		if resolution == "Finish":
 			continue
-
-		print("enter position corresponding to party - ")
-		print(party)
-		party_input = input()
 		
-		if  party_input not in party:
+		print("enter position corresponding to party - ")
+		print(encounter)
+		party_input = input()
+
+		if  party_input not in encounter:
 			continue
 
-		if resolution == "kill":
-			party[party_input].set_alive(False)
+		elif resolution == "join_group":
+				new_party = partys.pop(party_input)
+				main_party.add_party_group(new_party)
+				continue
 
+		elif resolution == "remove_group":
+				print("enter party name to remove -")
+				print(main_party.get_party_group())
+				party_input = input()
+				detached_party = main_party.remove_party_group(party_input)
+				partys[detached_party.get_name()] = detached_party
+				encounter[detached_party.get_name()] = detached_party
+				continue
+
+		elif resolution == "kill":
+			encounter[party_input].set_alive(False)
 
 		elif resolution == "revive":
-			party[party_input].set_alive(True)
+			encounter[party_input].set_alive(True)
 
-
-		elif resolution == "run":
-			print(resolution)
-			#chase?
-
-		elif resolution == "enemies run":
-			print(resolution)
-		
 		elif resolution == "change-sides":
-
 			value = input()
-
 			if value != "True" or value != "False":
-
-				party[party_input].set_side(ast.literal_eval(value))
+				encounter[party_input].set_side(ast.literal_eval(value))
+			
 			else:
-				party[party_input].set_side("")
-
+				encounter[party_input].set_side("")
 		elif resolution == "logg":
 			print("logging")
 			dungeon_logger.add_plain_text(input())
+
+		
+		"""if resolution == "add_adventurer":
+			adventurers = party[party_input].get_adventurers()
+			print(adventurers)
+			party[party_input].get_adventurers(input())
+			while select_adventurer != "Finish":
+				
+				party[main_party].add_adventurer(select_adventurer)
+				adventurers = party[party_input].get_adventurers()
+				print(adventurers)
+				select_adventurer = input()
+		"""
+		
+		"""
+		elif resolution == "run":
+			print(resolution)
+
+		elif resolution == "enemies run":
+			print(resolution)
+		"""
 
 def confrontation(partys, position_power):
 	#divide in if has main party or not
@@ -158,10 +183,10 @@ def confrontation_outcomes(encounters, main_party,  partys, positions):
 
 	for x in encounters:
 		print(encounters[x])
-		if len(encounters[x]) > 1:
+		if len(encounters[x]) > 1 or main_party.get_name() in encounters[x]:
 			deads = []
 			if main_party.get_name() in encounters[x]:
-				deads = main_party_encounters(encounters[x])
+				deads = main_party_encounters(encounters[x], partys, main_party)
 				positions[x].add_deads(deads)
 			else:
 				deads = confrontation([partys[key] for key in encounters[x]] , positions[x].get_power())
@@ -173,6 +198,9 @@ def create_encounters_diccionary(main_party, partys):
 	encounters = {}
 	encounters[main_party.get_location()] = {main_party.get_name(): main_party}
 	for x in partys:
+
+		if not partys[x].get_alive(): continue
+
 		position = partys[x].get_location()
 		if position in encounters:
 
