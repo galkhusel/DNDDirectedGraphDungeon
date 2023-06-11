@@ -93,13 +93,18 @@ def main_party_encounters(encounter, partys, main_party):
 
 	while resolution != "Finish":
 
-		print("enter a resolution : Finish, kill, revive, change-sides, join_group, remove_group, logg")
+		print("enter a resolution : Finish, kill, revive, change-sides, join_group, remove_group, logg, show")
 
 		resolution = input()
 
 		if resolution == "Finish":
 			continue
-		
+		elif resolution == "show":
+			for x in encounter:
+				print(x)
+				print(encounter[x].get_adventurers())
+				continue
+
 		print("enter position corresponding to party - ")
 		print(encounter)
 		party_input = input()
