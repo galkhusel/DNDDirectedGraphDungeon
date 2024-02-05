@@ -208,15 +208,17 @@ class Party:
 		self.location = location
 		self.side = side
 		self.alive = alive
-
 		self.adventurers = {}
-
 		self.objectives = {}
 		self.paths = []
+		self.raid = {}
 
 	def add_adventurer(self, adventurer):
 		self.adventurers[adventurer.get_name()] = adventurer
-		
+
+	def remove_adventurer(self, adventurer):
+		return self.adventurers.pop(adventurer.get_name())
+
 	def show_info(self):
 		print(self.name + self.description + self.location)
 		return 1
@@ -369,8 +371,7 @@ class Party:
 
 			self.power += 1
 
-	def random_travel(self, places):
-		
+	def random_travel(self, places):		
 		if self.location.isdigit():
 
 			self.random_travel_location(places)
@@ -378,3 +379,19 @@ class Party:
 		else:
 
 			self.random_travel_path(places)
+
+	def add_party_group(self, party):
+		self.raid[party.get_name()] = party
+
+	def remove_party_group(self, party_name):
+		if party_name in self.raid:
+			print("returning" + party_name)
+			party = self.raid.pop(party_name)
+			party.set_location(self.location)
+			return party
+		else:
+			print(party_name + "not found")
+			return None
+		
+	def get_party_group(self):
+		return self.raid.keys()
