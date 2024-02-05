@@ -36,8 +36,6 @@ def build_location(pathscsv, locationscsv, statusjson):
 				position_dic[x[0]] = Location(
 					name = x[0],
 					data = x[1],
-					power = int(x[2]) if int(x[2]) >= 0 else 0, 
-					max_power = int(x[3]) if int(x[3]) >= 0 else int(x[2]) if int(x[2]) >= 0 else 0,
 					)
 
 		for x in paths:
@@ -48,8 +46,6 @@ def build_location(pathscsv, locationscsv, statusjson):
 					destination = x[1],
 					name = x[2],
 					data = x[3],
-					power = int(x[4]) if int(x[4]) >= 0 else 0,
-					max_power = int(x[5]) if int(x[5]) >= 0 else int(x[4]) if int(x[4]) >= 0 else 0,
 					)
 
 			position_dic[p.get_name()] = p
@@ -83,8 +79,6 @@ def build_partys(partyscsv, mainpcsv, adventurerscsv, itemsjson):
 				party_dic[x[0]] = Party(
 					name = x[0],
 					description = x[1],
-					power = int(x[2]) if int(x[2]) >= 1 else '1',
-					max_power = int(x[3]) if int(x[3]) >= 0 else int(x[2]) if int(x[2]) >= 0 else 1,
 					location = x[4],
 					side = ast.literal_eval(x[5]),
 					alive = ast.literal_eval(x[6].strip()),
@@ -110,8 +104,6 @@ def build_partys(partyscsv, mainpcsv, adventurerscsv, itemsjson):
 		main_party =  Party(
 				name = main[0],
 				description = main[1],
-				power = 999,
-				max_power = 999,
 				location = main[2],
 				side = ast.literal_eval(main[3].strip()),
 				alive = True,
@@ -211,8 +203,6 @@ def save_situation_party(party_dic, partyscsv, date):
 			row = [
 				party_dic[x].get_name(),
 				party_dic[x].get_description(),
-				party_dic[x].get_power(),
-				party_dic[x].get_max_power(),
 				party_dic[x].get_location(),
 				party_dic[x].get_side(),
 				party_dic[x].get_alive(),
@@ -229,8 +219,6 @@ def writepath(path_object , path):
 		path_object.get_origin(),
 		path_object.get_destination(),
 		path_object.get_data(),
-		path_object.get_power(),
-		path_object.get_max_power(),
 		path_object.get_status(),
 		])
 
@@ -239,8 +227,6 @@ def writelocation(location_object , location):
 	location.writerow([
 		location_object.get_name(),
 		location_object.get_data(),
-		location_object.get_power(),
-		location_object.get_max_power(),
 		location_object.get_status(),
 		])
 

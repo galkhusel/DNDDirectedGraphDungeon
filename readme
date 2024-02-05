@@ -1,0 +1,48 @@
+dungeon : 
+    main frame para laburar en el dungeon.
+
+classes:
+    partys - grupos que caminan por el dungeon.
+    characters - entidades que conforman esos grupos.
+    path - aristaws.
+    location - vertices.
+lore : 
+    historia de como se llevo a cabo el dungeon.
+
+
+min:
+    dungeon que pueda ser transitable.
+ 
+    partys
+
+    sistema de calculo de daño y pelea. (cr sistem + hp)
+    trigger para revivir con x vida.
+
+    que las partys puedan acompañar a la main.
+
+    lore   movimientos, peleas (si murio alguien), anotaciones del dm
+
+med:
+    sistemas de conquista (fuerza en el ambiente que permita o no entrar a las partys)
+    sistema de visor.
+
+high:
+
+    agregar un pathfinding bueno. arbol de decicion
+
+
+
+correr scripts:
+python Dungeon.py
+
+correr todos los tests:
+python Classes_test.py
+
+correr tests:
+configurar test:
+    pip install pytest
+    root 
+    finishes with *_test
+
+install vsc extensions: pyhton
+

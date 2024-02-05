@@ -28,26 +28,12 @@ class TestLocation(unittest.TestCase):
             self.location.show_info()
             self.assertEqual(fake_stdout.getvalue(), expected_output)
         
-    def test_get_names_powers(self):
-        self.assertCountEqual(['1', 10], self.location.get_names_powers())
         
     def test_get_name(self):
         self.assertEqual('1', self.location.get_name())
         
     def test_get_data(self):
         self.assertEqual('starting location', self.location.get_data())
-        
-    def test_get_power(self):
-        self.assertEqual(10, self.location.get_power())
-        
-    def test_set_power(self):
-        self.location.set_power(True, 1)
-        self.assertEqual(9, self.location.get_power())
-        self.location.set_power(False, 1)
-        self.assertEqual(10, self.location.get_power())
-        
-    def test_get_max_power(self):
-        self.assertEqual(20, self.location.get_max_power())
 
 class TestPath(unittest.TestCase):
     
@@ -66,8 +52,7 @@ class TestPath(unittest.TestCase):
             self.path.show_info()
             self.assertEqual(fake_stdout.getvalue(), expected_output)
         
-    def test_get_names_powers(self):
-        self.assertCountEqual(['path', 5], self.path.get_names_powers())
+
         
     def test_get_origin(self):
         self.assertEqual('start', self.path.get_origin())
@@ -78,17 +63,6 @@ class TestPath(unittest.TestCase):
     def test_get_data(self):
         self.assertEqual('path between start and end', self.path.get_data())
         
-    def test_get_power(self):
-        self.assertEqual(5, self.path.get_power())
-        
-    def test_set_power(self):
-        self.path.set_power(True, 1)
-        self.assertEqual(4, self.path.get_power())
-        self.path.set_power(False, 1)
-        self.assertEqual(5, self.path.get_power())
-        
-    def test_get_max_power(self):
-        self.assertEqual(15, self.path.get_max_power())
 
 class TestAdventurer(unittest.TestCase):
 
@@ -117,9 +91,6 @@ class TestParty(unittest.TestCase):
     def test_get_name(self):
         self.assertEqual(self.party.get_name(), "Party 1")
 
-    def test_get_power(self):
-        self.assertEqual(self.party.get_power(), 5)
-
     def test_get_description(self):
         self.assertEqual(self.party.get_description(), "Some description")
 
@@ -130,65 +101,6 @@ class TestParty(unittest.TestCase):
         self.new_location = Location("2", "Some data", 6, 12)
         self.party.travel(self.new_location)
         self.assertEqual(self.party.get_location(), "2")
-
-    def test_random_travel_from_location(self):
-        places = [("p2", 3), ("p3", 8)]
-        self.party.random_travel(places)
-        self.assertEqual(self.party.get_location(), "p2")
-        self.assertEqual(self.party.get_power(), 4)
-
-    def test_random_travel_with_insufficient_power_from_location(self):
-        places = [("p2", 3), ("p3", 8)]
-        self.party.set_power(2)
-        self.party.set_location("1")
-        self.party.random_travel(places)
-        self.assertEqual(self.party.get_power(), 3)
-        self.assertEqual(self.party.get_location(), "1")
-
-    def test_random_travel_from_Path_going_ahead(self):
-        places = [("1", 3), ("3", 5)]
-        self.party.set_location("p2")
-        self.party.set_power(5)
-        self.party.random_travel(places)
-        self.assertEqual(self.party.get_location(), "3")
-        self.assertEqual(self.party.get_power(), 4)
-
-    def test_random_travel_with_insufficient_power_from_Path(self):
-        places = [("1", 3), ("3", 8)]
-        self.party.set_location("p2")
-        self.party.set_power(2)
-        self.party.random_travel(places)
-        self.assertEqual(self.party.get_power(), 3)
-        self.assertEqual(self.party.get_location(), "p2")
-
-    def test_random_travel_from_Path_going_backwards(self):
-        places = [("1", 3), ("3", 8)]
-        self.party.set_location("p2")
-        self.party.set_power(7)
-        self.party.random_travel(places)
-        self.assertEqual(self.party.get_location(), "1")
-        self.assertEqual(self.party.get_power(), 6)
-
-    def test_set_power(self):
-        self.party.set_power(10)
-        self.assertEqual(self.party.get_power(), 10)
-
-    def test_set_power_character_damage(self):
-        self.party.set_power(-1)
-        adv1 = self.party.get_adventurers()[self.adventurer1.get_name()]
-        adv2 = self.party.get_adventurers()[self.adventurer2.get_name()]
-        self.assertEqual(adv1.get_health() == 84 or adv2.get_health() == 84, True)
-
-    def test_set_power_character_die(self):
-        self.party.set_power(-85)
-        adv1 = self.party.get_adventurers()[self.adventurer1.get_name()]
-        adv2 = self.party.get_adventurers()[self.adventurer2.get_name()]
-        self.assertEqual( not adv1.get_alive() or not adv2.get_alive(), True)
-
-    def test_set_power_party_die(self):
-        self.party.set_power(-85)
-        self.party.set_power(-85)
-        self.assertEqual(self.party.get_alive(), False)
 
 class TestMain(unittest.TestCase):
 

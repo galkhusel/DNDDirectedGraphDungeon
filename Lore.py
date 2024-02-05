@@ -1,10 +1,15 @@
 import datetime
 
+"""esto hay que chequear todo."""
+
 class Logger:
     def __init__(self):
         self.travel_history = {}
         self.encounter_history = {}
         self.text_list = {}
+
+    def add_dead_history():
+        return 1
 
     def add_travel_history(self, location, party):
         if location not in self.travel_history:
@@ -35,6 +40,7 @@ class Logger:
                 self.text_list[x].append(arrived)   
 
     def add_plain_text(self, msg):
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with open('dungeon_crawl.log', 'a') as log_file:
             for msg in self.text_list:
                 log_file.write(f'{timestamp} - {msg}\n')

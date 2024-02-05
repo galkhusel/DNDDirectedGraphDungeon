@@ -18,6 +18,8 @@ import ast
 ====================================================================================================
 """
 
+"""esto hay que chequear todo."""
+
 dungeon_logger = Logger()
 
 # this function returns where the parties can move
@@ -72,9 +74,7 @@ def create_party_lists(partys):
 			enemies += x.get_power()
 			enemies_list.append(x)
 
-		elif position.power > 0:
-			neutral_list.append(x)
-			neutral += x.get_power()
+
 
 	return {"allies" :  (allies_list, allies),
 			"enemies":	(enemies_list, enemies),

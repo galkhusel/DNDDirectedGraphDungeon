@@ -18,12 +18,7 @@ class Location:
 		self.name = name
 		self.paths = {}
 		self.data = data
-		self.power = power
-		self.original_power = power
-		self.max_power = max_power
-		#self.objectives = objectives
-		self.status = {}
-		self.last_status = None
+		self.deads = []
 
 	def add_path(self, path):
 		self.paths[path.name] = path
@@ -35,11 +30,6 @@ class Location:
 		print("currently in Location: " + self.name)
 		print("paths" + str(list(self.paths.keys())))
 		print(self.data)
-		#if self.power in self.status:
-		#	print(self.status[self.power])
-		#else:
-		#	print(self.last_status)
-		#return 1
 
 	def get_names_powers(self):
 		return [self.name, self.power]
@@ -50,54 +40,19 @@ class Location:
 	def get_data(self):
 		return self.data
 
-	def get_power(self):
-		return self.power
+	def add_deads(self, dead):
+		self.deads.append(dead)
 
-	def set_power(self,boolean, power):
-		
-		if boolean != None:
-			if boolean:
-				self.power -= power
-			if not boolean:
-				self.power += power
-
-		print(self.status)
-		if self.power in self.status:
-			self.last_status = self.status[self.power]
-		print(self.power)
-
-	def get_max_power(self):
-		return self.max_power
-
-	def add_deads(self, deads):
-
-		if "deads" not in self.status:
-			self.status["deads"] = deads
-		else:
-			for x in deads:
-				self.status["deads"].append(x)
-
-	def get_status(self):
-		return self.status
-
-	def set_status(self, statusl):
-		if self.status == {}:
-			self.status = statusl
-		else:
-			for x in statusl:
-				self.status[x] = statusl[x] 
 
 class Path:
 	#status indicates the condition of the path depending on the power of the path its a dic
 	#	def __init__(objectives, status):
-	def __init__(self, origin, destination ,name, data, power : int, max_power : int ):
+	def __init__(self, origin, destination ,name, data):
 		self.name = name
 		self.origin = origin
 		self.destination = destination
 		self.data = data
-		self.power = power
-		self.max_power = max_power
-		self.status = {}
+		self.deads = []
 
 	def get_connections(self):
 		return [self.origin, self.destination]
@@ -109,10 +64,8 @@ class Path:
 		print("currently in path: " + self.name)
 		print("origin : " + self.origin + " - destination : " + self.destination)
 		print(self.data)
+		print(self.deads)
 		return 1
-
-	def get_names_powers(self):
-		return [self.name, self.power]
 
 	def get_origin(self):
 		return self.origin
@@ -123,48 +76,15 @@ class Path:
 	def get_data(self):
 		return self.data
 
-	def get_power(self):
-		return self.power
+	def add_deads(self, dead):
+		self.deads.append(dead)
 
-	def set_power(self, boolean, power):
-		if boolean != None:
-			if boolean:
-				self.power -= power
-			if not boolean:
-				self.power += power
-
-		print(self.status)
-		if self.power in self.status:
-			self.last_status = self.status[self.power]
-		print(self.power)
-
-	def get_max_power(self):
-		return self.max_power
-
-	def add_deads(self, deads):
-
-		if "deads" not in self.status:
-			self.status["deads"] = deads
-		else:
-			for x in deads:
-				self.status["deads"].append(x)
-
-	def get_status(self):
-		return self.status
-
-	def set_status(self, statusl):
-		if self.status == {}:
-			self.status = statusl
-		else:
-			for x in statusl:
-				self.status[x] = statusl[x] 
 
 class Adventurers:
-	def __init__(self, name, health, max_health,  status, alive):
+	def __init__(self, name, health, max_health, alive):
 		self.name = name
 		self.health = health
 		self.max_health = max_health
-		self.status = status
 		self.alive = alive
 
 	def get_name(self):
@@ -193,26 +113,20 @@ class Adventurers:
 
 	def calculate_damage(self, damage):
 		if self.get_alive():
-			self.health += damage 
+			self.health -= damage 
 			if self.health <= 0:
 				self.alive = False
 
 class Party:
 	#status indicate which party member are alive and their conditions, also the party inventory its a dic
 	#def __init__(, objectives, chase, graph, status):	
-	def __init__(self, name, description ,power : int, max_power:int , location, side : bool, alive):
+	def __init__(self, name, description, location, side : bool, alive):
 		self.name = name
 		self.description = description
-		self.power = power
-		self.max_power = max_power
 		self.location = location
 		self.side = side
 		self.alive = alive
-
 		self.adventurers = {}
-
-		self.objectives = {}
-		self.paths = []
 
 	def add_adventurer(self, adventurer):
 		self.adventurers[adventurer.get_name()] = adventurer
@@ -227,20 +141,11 @@ class Party:
 	def get_name(self):
 		return self.name
 
-	def get_power(self):
-		return self.power
-
-	def get_max_power(self):
-		return self.max_power
-
 	def get_description(self):
 		return self.description
 
 	def get_side(self):
 		return self.side
-
-	def set_side(self):
-		self.side = side
 
 	def get_alive(self):
 		return self.alive
@@ -254,6 +159,7 @@ class Party:
 	def set_location(self, location):
 		self.location = location
 	
+	"""de aca para abajo hay que chequear"""
 	def select_character(self):
 
 		character_selection = random.choice(list(self.adventurers.keys()))
@@ -299,22 +205,6 @@ class Party:
 
 		return dead 
 
-	def set_power(self, power):
-		
-		self.power = power
-		deads = self.status()
-
-		adventurers_alive = False
-
-		for x in self.adventurers:
-			if self.adventurers[x].get_alive():
-				adventurers_alive = True
-				break
-
-		if adventurers_alive == False:
-			self.alive = False
-		return deads
-
 	def set_side(self, side):
 		self.side = side
 
@@ -356,18 +246,6 @@ class Party:
 			return new_place
 
 		return None
-
-	def random_travel_location(self, paths):
-
-		new_location = self.obtain_travel(paths)
-
-		if new_location != None:
-			self.location = new_location[0]
-			self.power -= 1
-
-		elif self.power << self.max_power:
-
-			self.power += 1
 
 	def random_travel(self, places):
 		
