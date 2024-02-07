@@ -12,9 +12,8 @@ import random
 """
 
 class Location:
-	# status indicates the condition of the path depending on the power of the path its a dic
 	# 	def __init__(objectives, status):
-	def __init__(self, name, data, power : int, max_power ):
+	def __init__(self, name, data ):
 		self.name = name
 		self.paths = {}
 		self.data = data
@@ -31,8 +30,6 @@ class Location:
 		print("paths" + str(list(self.paths.keys())))
 		print(self.data)
 
-	def get_names_powers(self):
-		return [self.name, self.power]
 
 	def get_name(self):
 		return self.name
@@ -45,7 +42,6 @@ class Location:
 
 
 class Path:
-	#status indicates the condition of the path depending on the power of the path its a dic
 	#	def __init__(objectives, status):
 	def __init__(self, origin, destination ,name, data):
 		self.name = name
@@ -81,11 +77,12 @@ class Path:
 
 
 class Adventurers:
-	def __init__(self, name, health, max_health, alive):
+	def __init__(self, name, health, max_health,cr ,alive):
 		self.name = name
 		self.health = health
 		self.max_health = max_health
 		self.alive = alive
+		self.cr = cr
 
 	def get_name(self):
 		return self.name
@@ -93,14 +90,14 @@ class Adventurers:
 	def get_health(self):
 		return self.health
 
-	def get_status(self):
-		return self.status
-
 	def get_max_health(self):
 		return self.max_health
 
 	def get_alive(self):
 		return self.alive
+	
+	def get_cr(self):
+		return self.cr
 
 	def set_name(self, name):
 		self.name = name
@@ -160,7 +157,7 @@ class Party:
 		self.location = location
 	
 	"""de aca para abajo hay que chequear"""
-	def select_character(self):
+	def select_character_random(self):
 
 		character_selection = random.choice(list(self.adventurers.keys()))
 		character = self.adventurers[character_selection]
@@ -186,24 +183,12 @@ class Party:
 		return None
 
 	def status(self):
-			
-		dead = None
+		
+		print("the party is alive {}".format(self.alive))
 
-		if self.power <= -1:
+		print("the party has {}".format(self.adventurers))
 
-			character = self.select_character()
-
-			if character != None:
-				character.calculate_damage(self.power)
-			
-				if character.get_alive() == False:
-					dead = character
-					self.power = self.max_power
-
-				else:
-					self.power = 0
-
-		return dead 
+		return 1
 
 	def set_side(self, side):
 		self.side = side
@@ -214,38 +199,11 @@ class Party:
 
 	def random_travel_path(self, locations):
 
-		if locations[1][1] <= self.power:
-			self.power -= 1
-			self.location = locations[1][0]
+		return locations[1]
+	
+	def random_travel_location(self, locations):
 
-		elif locations[0][1] <= self.power and self.power == self.max_power:
-			self.power -= 1
-			self.location = locations[0][0]
-
-		else :
-			self.power += 1
-
-	def obtain_travel(self, paths):
-
-		amount_places = len(paths)
-		new_place = random.choice(paths)
-		aux_places = 0
-		
-		already_tried = []
-
-		while new_place[1] > self.power:
-			if aux_places == amount_places:break
-			new_place = random.choice(paths)
-			paths.remove(new_place)
-			already_tried.append(new_place)
-
-			aux_places += 1
-			
-
-		if aux_places <= amount_places and new_place[1] <= self.power:
-			return new_place
-
-		return None
+		return random.choice(locations)
 
 	def random_travel(self, places):
 		

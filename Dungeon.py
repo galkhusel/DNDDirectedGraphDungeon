@@ -28,7 +28,7 @@ def make_connection_list(positions, actual_position):
 	list_aux = list(positions[actual_position].get_connections())
 	list_connections = []
 	for x in list_aux:
-		list_connections.append(positions[x].get_names_powers())
+		list_connections.append(positions[x].get_name())
 	return list_connections
 
 def apply_damage(partys, damage):
@@ -44,12 +44,7 @@ def apply_damage(partys, damage):
 		party = random.choice(partys)
 
 		if party.get_alive():
-			actual_power = party.get_power() - damage
-			deads = party.set_power(actual_power)
-			for x in deads:
-				dead.append(x)
-
-		damage -= 1
+			damage -= 1
 
 	return dead
 
@@ -78,12 +73,11 @@ def create_party_lists(partys):
 
 	return {"allies" :  (allies_list, allies),
 			"enemies":	(enemies_list, enemies),
-			"neutral":	(neutral_list, neutral),
 	}
 
-def calculate_outcome(partys, position_power):
+def calculate_outcome(partys):
 
-	return partys["allies"][1] - partys["enemies"][1] - position_power + partys["neutral"][1]
+	return partys["allies"][1] - partys["enemies"][1]
 
 def main_party_encounters(party):
 
@@ -134,24 +128,17 @@ def main_party_encounters(party):
 			print("logging")
 			dungeon_logger.add_plain_text(input())
 
-def confrontation(partys, position_power):
+def confrontation(partys):
 	#divide in if has main party or not
 
 	dead = []
-
-	partys_by_relationships = create_party_lists(partys)
-
-	outcome = calculate_outcome(partys_by_relationships, position_power)
-
-	damage = math.sqrt(outcome**2)
-
-	if partys_by_relationships["allies"][1] != 0 and partys_by_relationships["enemies"][1] != 0:
-		if outcome < 0:
-			dead.append(apply_damage(partys_by_relationships["allies"][0], damage))
-
-		if outcome > 0:
-			dead.append(apply_damage(partys_by_relationships["enemies"][0], damage))
-
+	print(partys)
+	outcome = calculate_outcome(partys)
+	if outcome < 0:
+		apply_damage(partys["allies"], outcome)
+	elif outcome > 0:
+		apply_damage(partys["enemies"], outcome)
+	
 	return dead
 
 def confrontation_outcomes(encounters, main_party,  partys, positions):
@@ -164,7 +151,7 @@ def confrontation_outcomes(encounters, main_party,  partys, positions):
 				deads = main_party_encounters(encounters[x])
 				positions[x].add_deads(deads)
 			else:
-				deads = confrontation([partys[key] for key in encounters[x]] , positions[x].get_power())
+				deads = confrontation([partys[key] for key in encounters[x]])
 				positions[x].add_deads(deads)
 
 			dungeon_logger.add_encounter_history(x, encounters[x], deads)
@@ -187,20 +174,6 @@ def calculate_status(positions, main_party, partys):
 	encounters = create_encounters_diccionary(main_party, partys)
 	confrontation_outcomes(encounters, main_party,  partys, positions)
 
-#adjust the power level by 1 depending if the party is allied or enemy , if neutral skips
-def adjust_power_level(position, party):
-	
-	print(party.get_side())
-
-	if party.get_side() != None:
-
-		if party.get_side() == True:
-			position.set_power(True, 1)
-
-		elif party.get_side() == False:
-			position.set_power(False, 1)
-
-	return
 
 def other_party_movement(positions, partys):
 
@@ -214,7 +187,6 @@ def other_party_movement(positions, partys):
 
 		#adjusting power level of location
 		actual_location = positions[partys[p_name].get_location()]
-		adjust_power_level(actual_location, partys[p_name])
 
 		dungeon_logger.add_travel_history(actual_location, p_name)
 
@@ -228,11 +200,8 @@ def main_party_travel(positions, main_party, travel):
 
 	if travel in list_:
 		#moving
-		main_party.travel(positions[travel]) 
-		
-		#adjusting power level of location
-		actual_location = positions[travel]
-		adjust_power_level(actual_location, main_party)
+		main_party.travel(positions[travel]) 	
+
 		return True
 	else:
 		print(travel + "not found")
@@ -269,7 +238,7 @@ def enter_dungeon(positions, partys, main_party):
 
 		other_party_movement(positions, partys)
 
-		calculate_status(positions, main_party , partys)
+		#calculate_status(positions, main_party , partys)
 
 		dungeon_logger
 
@@ -294,8 +263,6 @@ def main():
 														"partys.csv", 
 														"mainParty.csv", 
 														"adventurers.csv",
-														"items.json",
-														"location_status.json"
 														)
 
 	enter_dungeon(
@@ -313,10 +280,11 @@ def main():
 					"partys.csv", 
 					"mainParty.csv", 
 					"adventurers.csv",
-					"items.json",
-					"location_status.json"
 					)
 	
 
 if __name__ == '__main__':
 	main()
+
+
+

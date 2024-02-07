@@ -41,8 +41,18 @@ python Classes_test.py
 correr tests:
 configurar test:
     pip install pytest
+    dentro de vsc
     root 
     finishes with *_test
 
 install vsc extensions: pyhton
+
+
+paths
+
+    automatic movement + fight
+	1 other_party_movement
+	2 get confrontation
+	3 calculate confrontation_outcomes
+	4 apply_damage
 
