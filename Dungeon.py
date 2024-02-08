@@ -176,20 +176,23 @@ def calculate_status(positions, main_party, partys):
 
 
 def other_party_movement(positions, partys):
-
+	
 	for p_name in partys:
 		if not partys[p_name].get_alive(): continue
-
+		print("other party movement")
 		#moving
 		actual_position = partys[p_name].get_location()
+		print(actual_position)
 		list_connections = make_connection_list(positions, actual_position)
+		print(list_connections)
 		partys[p_name].random_travel(list_connections)
 
 		#adjusting power level of location
 		actual_location = positions[partys[p_name].get_location()]
 
 		dungeon_logger.add_travel_history(actual_location, p_name)
-
+		print(partys[p_name].get_name())
+		print(partys[p_name].get_location())
 	return 1
 
 # party tries to move to an adjacent place if it can move it adjust the power level of that place 

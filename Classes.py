@@ -198,19 +198,23 @@ class Party:
 		return new_place
 
 	def random_travel_path(self, locations):
-
-		return locations[1]
+		print("entre path")
+		self.set_location(random.choice(locations))
+		return 
 	
 	def random_travel_location(self, locations):
-
-		return random.choice(locations)
+		print("entre location")
+		self.set_location(random.choice(locations))
+		return 1
 
 	def random_travel(self, places):
-		
+		print("entre")
+		print(places)
 		if self.location.isdigit():
-
+		
 			self.random_travel_location(places)
 
 		else:
 
 			self.random_travel_path(places)
+		
