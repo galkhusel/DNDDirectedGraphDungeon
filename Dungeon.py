@@ -1,6 +1,6 @@
 import random
 import math
-from Classes import Path, Location, Party, Adventurers
+from Classes import Path, Room, Party, Adventurers
 from ManageCSV import build_dungeon, save_situation
 from Lore import Logger
 import os
@@ -56,8 +56,6 @@ def create_party_lists(partys):
 	enemies = 0
 	enemies_list = []
 
-	neutral_list = []
-	neutral = 0
 
 
 	for x in partys:

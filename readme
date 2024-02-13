@@ -15,12 +15,13 @@ min:
  
     partys
 
-    sistema de calculo de daño y pelea. (cr sistem + hp)
-    trigger para revivir con x vida.
+        sistema de calculo de daño y pelea. (cr sistem + hp)
+        trigger para revivir con x vida.
 
-    que las partys puedan acompañar a la main.
+        que las partys puedan acompañar a la main.
 
-    lore   movimientos, peleas (si murio alguien), anotaciones del dm
+    lore   
+        movimientos, peleas (si murio alguien), anotaciones del dm
 
 med:
     sistemas de conquista (fuerza en el ambiente que permita o no entrar a las partys)

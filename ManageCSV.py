@@ -4,7 +4,7 @@ import json
 
 import ast
 
-from Classes import Path, Location, Party, Adventurers
+from Classes import Path, Room, Party, Adventurers
 
 
 PATH_LOAD = "Dungeon\\"
@@ -33,7 +33,7 @@ def build_location(pathscsv, locationscsv):
 
 		for x in locations:
 			if len(x) > 0 :
-				position_dic[x[0]] = Location(
+				position_dic[x[0]] = Room(
 					name = x[0],
 					data = x[1],
 					)

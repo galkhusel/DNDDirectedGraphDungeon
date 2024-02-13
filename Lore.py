@@ -10,7 +10,7 @@ class Logger:
 
     def add_dead_history():
         return 1
-
+    
     def add_travel_history(self, location, party):
         if location not in self.travel_history:
             self.travel_history[location] = [party]
