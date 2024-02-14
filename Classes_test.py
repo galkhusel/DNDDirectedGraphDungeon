@@ -108,7 +108,7 @@ class TestParty(unittest.TestCase):
 
 
     def test_get_location(self):
-        self.assertEqual(self.party.get_Room(), "1")
+        self.assertEqual(self.party.get_room(), "1")
 
     def test_get_name(self):
         self.assertEqual(self.party.get_name(), "Party 1")
@@ -122,7 +122,7 @@ class TestParty(unittest.TestCase):
     def test_travel(self):
         self.new_location = Room("2", "Some data")
         self.party.travel(self.new_location)
-        self.assertEqual(self.party.get_Room(), "2")
+        self.assertEqual(self.party.get_room(), "2")
 
 class TestMain(unittest.TestCase):
 

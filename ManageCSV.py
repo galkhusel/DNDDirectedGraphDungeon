@@ -23,6 +23,22 @@ PATH_SAVE = "Dungeon_Updated\\"
 """
 # armar clase csv manager.
 
+class csv_manager:
+	def __innit__(self, Room, Path, Party, Adventurers):
+		self.Room
+		self.Path
+		self.Party
+		self.Adventurers
+		return 1
+	
+	def build():
+		return 1
+	
+	def save():
+		return 1
+
+
+
 def build_location(pathscsv, locationscsv):
 
 	position_dic = {}
@@ -74,7 +90,7 @@ def build_partys(partyscsv, mainpcsv, adventurerscsv):
 				party_dic[x[0]] = Party(
 					name = x[0],
 					description = x[1],
-					location = x[4],
+					Room = x[4],
 					side = ast.literal_eval(x[5]),
 					alive = ast.literal_eval(x[6].strip()),
 					)
@@ -88,8 +104,9 @@ def build_partys(partyscsv, mainpcsv, adventurerscsv):
 						name = x[0], 
 						health = x[1], 
 						max_health = x[2],  
-						alive = ast.literal_eval(x[3]),
-						cr = ast.literal_eval(x[5])
+						cr = ast.literal_eval(x[3]),
+						alive = ast.literal_eval(x[4]),
+						heal_capacity = ast.literal_eval(x[6])
 						)
 				
 					party_dic[x[4]].add_adventurer(adv)
@@ -99,12 +116,12 @@ def build_partys(partyscsv, mainpcsv, adventurerscsv):
 		main_party =  Party(
 				name = main[0],
 				description = main[1],
-				location = main[2],
+				Room = main[2],
 				side = ast.literal_eval(main[3].strip()),
 				alive = True,
 				)
 		
-		print(main_party.get_location())
+		print(main_party.get_room())
 
 	return party_dic, main_party
 
@@ -166,7 +183,7 @@ def save_situation_main(main_party, maincsv, date):
 		row = [
 			main_party.get_name(),
 			main_party.get_description(),
-			main_party.get_location(),
+			main_party.get_room(),
 			main_party.get_side(),
 			]
 
@@ -185,7 +202,7 @@ def save_situation_party(party_dic, partyscsv, date):
 			row = [
 				party_dic[x].get_name(),
 				party_dic[x].get_description(),
-				party_dic[x].get_location(),
+				party_dic[x].get_room(),
 				party_dic[x].get_side(),
 				party_dic[x].get_alive(),
 				]

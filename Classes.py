@@ -49,7 +49,6 @@ class Room:
 		return list(self.connection.keys())
 
 class Path(Room):
-	#	def __init__(objectives, status):
 	def __init__(self, name, origin, destination, data):
 		super().__init__(name, data)
 		self.connection["origin"] = origin
