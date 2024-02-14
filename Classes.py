@@ -140,9 +140,8 @@ class Party(Entity):
 		print(self.name + self.description + self.Room)
 		return 1
 
-	def get_Room(self):
+	def get_room(self):
 		return self.Room
-
 
 	def get_description(self):
 		return self.description
@@ -157,14 +156,13 @@ class Party(Entity):
 		if adventurer in self.adventurers:	return self.adventurers[adventurer]
 		return None
 	
-	def set_Room(self, Room):
+	def set_room(self, Room):
 		self.Room = Room
 	
 	def set_side(self, side):
 		self.side = side
 	
 	def select_character_random(self):
-
 
 		alive_characters = [x for x in self.adventurers.keys() if self.adventurers[x].get_alive() == True]
 
@@ -185,5 +183,5 @@ class Party(Entity):
 	def random_travel(self, Rooms):
 		print("entre")
 		print(Rooms)
-		self.set_Room(random.choice(Rooms))
+		self.set_room(random.choice(Rooms))
 		

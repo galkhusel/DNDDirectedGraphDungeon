@@ -61,8 +61,7 @@ class TestPath(unittest.TestCase):
         self.assertEqual('end', self.path.get_destination())
         
     def test_get_data(self):
-        self.assertEqual('path between start and end', self.path.get_data())
-        
+        self.assertEqual('path between start and end', self.path.get_data())        
 
 class TestAdventurer(unittest.TestCase):
 
@@ -97,8 +96,6 @@ class TestAdventurer(unittest.TestCase):
         self.assertEqual(self.adventurer.get_health(), 0)
         self.assertEqual(self.adventurer.get_alive(), False)
     
-
-
 class TestParty(unittest.TestCase):
 
     def setUp(self):
