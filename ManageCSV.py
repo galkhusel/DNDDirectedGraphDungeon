@@ -24,19 +24,27 @@ PATH_SAVE = "Dungeon_Updated\\"
 # armar clase csv manager.
 
 class csv_manager:
-	def __innit__(self, Room, Path, Party, Adventurers):
-		self.Room
-		self.Path
-		self.Party
-		self.Adventurers
-		return 1
-	
-	def build():
-		return 1
-	
-	def save():
-		return 1
+	def __innit__(self, Room_csv, Path_csv, Party_csv, Adventurers_csv):
+		self.csv_ = {"room" : [Room, Room_csv],
+			  		"path" : [Path, Path_csv],
+					"party" : [Party, Party_csv],
+					"adventurers" : [Adventurers, Adventurers_csv]}
+		
+	def build(self):
+		
+		class_dictionary = {}
 
+		for c in self.csv_:
+			class_rows = self.csv_[c]
+			aux_dictionary = {}
+			for row in class_rows[1]:
+				class_rows[0]([x for x in row])
+	
+	def save(self):
+		for x in list:
+			for row in csv
+				x[x for x in row]
+		return all
 
 
 def build_location(pathscsv, locationscsv):

@@ -17,8 +17,8 @@ class Room:
 	def __init__(self, name, data, deads = []):
 		self.name = name
 		self.data = data
-		self.connection = {}
 		self.deads = deads
+		self.connection = {}
 
 	def get_name(self):
 		return self.name
@@ -49,8 +49,8 @@ class Room:
 		return list(self.connection.keys())
 
 class Path(Room):
-	def __init__(self, name, origin, destination, data):
-		super().__init__(name, data)
+	def __init__(self, name, data, deads, origin, destination):
+		super().__init__(name, data, deads)
 		self.connection["origin"] = origin
 		self.connection["destination"] = destination
 
@@ -130,7 +130,6 @@ class Party(Entity):
 		self.Room = Room
 		self.side = side
 		self.adventurers = {}
-
 
 	def add_adventurer(self, adventurer):
 		self.adventurers[adventurer.get_name()] = adventurer
