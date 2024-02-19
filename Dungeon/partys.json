@@ -1,0 +1,13 @@
+{    "legoldenfishassociados" : {
+        "description" : "lopibe_riends", 
+        "Room" : "p6", 
+        "side" : true,
+        "alive" : true
+    },   
+    "else" : {
+        "description" : "lopibe", 
+        "Room" : "p6", 
+        "side" : false,
+        "alive" : true
+    }
+}

@@ -23,6 +23,10 @@ PATH_SAVE = "Dungeon_Updated\\"
 """
 # armar clase csv manager.
 
+#pasar csv a json
+# cambiar como ingresa todo.
+#json de orden {nombre:{datos}} 
+
 class csv_manager:
 	def __innit__(self, Room_csv, Path_csv, Party_csv, Adventurers_csv):
 		self.csv_ = {"room" : [Room, Room_csv],
@@ -38,7 +42,7 @@ class csv_manager:
 			class_rows = self.csv_[c]
 			aux_dictionary = {}
 			for row in class_rows[1]:
-				class_rows[0]([x for x in row])
+				aux_dictionary class_rows[0](**row)
 	
 	def save(self):
 		for x in list:

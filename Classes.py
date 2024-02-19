@@ -82,7 +82,7 @@ class Entity:
 	def get_alive(self):
 		return self.alive
 
-	def set_alive(self, alive):
+	def set_alive(self, alive):b
 		self.alive = alive
 
 class Adventurers(Entity):
