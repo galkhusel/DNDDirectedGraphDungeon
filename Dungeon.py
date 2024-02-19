@@ -1,7 +1,7 @@
 import random
 import math
 from Classes import Path, Room, Party, Adventurers
-from ManageCSV import build_dungeon, save_situation
+from ManageCSV import File, save_situation
 from Lore import Logger
 import os
 import ast
@@ -258,13 +258,18 @@ def main():
 
 	dungeon_logger.add_plain_text("ONCE AGAIN WE ENTER THE DUNGEON")
 
-	position_dic, party_dic, main_party = build_dungeon(
-														"paths.csv", 
-														"locations.csv", 
-														"partys.csv", 
-														"mainParty.csv", 
-														"adventurers.csv",
-														)
+	file = File("room.csv", 
+				"paths.csv", 
+				"partys.json", 
+				"adventurers.json",
+				"mainParty.json", 
+				)
+
+	dic_ = file.build()
+
+	position_dic = dic_["room"] + dic_["path"]
+	party_dic = dic_["party"]
+	main_party = dic_["main_party"]
 
 	enter_dungeon(
 				position_dic, 
@@ -286,6 +291,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
-
-

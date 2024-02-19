@@ -27,28 +27,38 @@ PATH_SAVE = "Dungeon_Updated\\"
 # cambiar como ingresa todo.
 #json de orden {nombre:{datos}} 
 
-class csv_manager:
-	def __innit__(self, Room_csv, Path_csv, Party_csv, Adventurers_csv):
-		self.csv_ = {"room" : [Room, Room_csv],
+class File:
+	def __init__(self, Room_csv, Path_csv, Party_csv, Adventurers_csv, MainParty_csv):
+		self.dic = {"room" : [Room, Room_csv],
 			  		"path" : [Path, Path_csv],
 					"party" : [Party, Party_csv],
-					"adventurers" : [Adventurers, Adventurers_csv]}
+					"adventurers" : [Adventurers, Adventurers_csv],
+					"main_party" : [Party, MainParty_csv]}
 		
 	def build(self):
 		
 		class_dictionary = {}
 
-		for c in self.csv_:
-			class_rows = self.csv_[c]
+		for class_ in self.dic:
 			aux_dictionary = {}
-			for row in class_rows[1]:
-				aux_dictionary class_rows[0](**row)
+
+			class_file_path = self.dic[class_][1]
+			class_creator = self.dic[class_][1]
+			with open(PATH_LOAD + class_file_path) as path:
+			
+				for key in path:
+					entity = path[key]
+					object_ = class_creator(key, **entity)
+					aux_dictionary[object_.get_name()] = object_
+
+			class_dictionary[class_] = aux_dictionary
+		return class_dictionary
 	
-	def save(self):
-		for x in list:
-			for row in csv
-				x[x for x in row]
-		return all
+#	def save(self):
+#		for x in list:
+#			for row in csv:
+#				x[x for x in row]
+#		return all
 
 
 def build_location(pathscsv, locationscsv):
