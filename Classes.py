@@ -122,8 +122,6 @@ class Adventurers(Entity):
 		else:
 			self.set_health(self.max_health)
 
-
-
 class Party(Entity):
 
 	def __init__(self,name, description, Room, side : bool, alive):

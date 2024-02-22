@@ -268,13 +268,9 @@ def main():
 	party_dic = dic_["party"]
 
 	print(position_dic)
-#
-#
-#	abajo tengo que obtener de forma dinamica el objeto de main party
-#		
-#
-	main_party_name = list(dic_["main_party"].keys())[0]
-	main_party = dic_["main_party"][main_party_name]
+
+	main_party_name = list(dic_["mainParty"].keys())[0]
+	main_party = dic_["mainParty"][main_party_name]
 
 	print(main_party.get_room())
 
@@ -284,15 +280,12 @@ def main():
 				main_party)
 
 	print("saving progress")
-	save_situation(
+
+	
+	file.save(
 					position_dic, 
 					party_dic, 
 					main_party, 
-					"paths.csv", 
-					"locations.csv", 
-					"partys.csv", 
-					"mainParty.csv", 
-					"adventurers.csv",
 					)
 	
 
