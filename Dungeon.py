@@ -198,9 +198,10 @@ def main_party_travel(positions, main_party, travel):
 
 	actual_position = main_party.get_room()
 	list_ = list(positions[actual_position].get_connections())
-
+	
 	if travel in list_:
 		#moving
+		
 		main_party.travel(positions[travel]) 	
 
 		return True
@@ -213,16 +214,12 @@ def enter_dungeon(positions, partys, main_party):
 	travel = 1
 
 	while travel != "Quit":
-
+		
 		positions[main_party.get_room()].show_info()
 		print("travel to where?")
 		print("enter a path or Quit")
 		travel = input()
 
-
-
-		if travel == "Quit":
-			break
 
 		print()
 		print()
@@ -258,8 +255,8 @@ def main():
 
 	dungeon_logger.add_plain_text("ONCE AGAIN WE ENTER THE DUNGEON")
 
-	file = File("room.csv", 
-				"paths.csv", 
+	file = File("room.json", 
+				"paths.json", 
 				"partys.json", 
 				"adventurers.json",
 				"mainParty.json", 
@@ -267,9 +264,19 @@ def main():
 
 	dic_ = file.build()
 
-	position_dic = dic_["room"] + dic_["path"]
+	position_dic = dic_["room"] | dic_["path"]
 	party_dic = dic_["party"]
-	main_party = dic_["main_party"]
+
+	print(position_dic)
+#
+#
+#	abajo tengo que obtener de forma dinamica el objeto de main party
+#		
+#
+	main_party_name = list(dic_["main_party"].keys())[0]
+	main_party = dic_["main_party"][main_party_name]
+
+	print(main_party.get_room())
 
 	enter_dungeon(
 				position_dic, 

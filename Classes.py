@@ -39,6 +39,7 @@ class Room:
 		if path in self.connection:	return self.connection[path] 
 
 	def show_info(self):
+		print("entro")
 		print("currently in Room: " + self.name)
 		print("paths" + str(list(self.connection.keys())))
 		print(self.data)
@@ -64,8 +65,9 @@ class Path(Room):
 		return self.connection["destination"]
 	
 	def show_info(self):
+		print("entro show info path")
 		print("currently in path: " + self.name)
-		print("origin : " + self.connection["origin"] + " - destination : " + self.connection["destination"])
+		print("origin : " + str(self.connection["origin"]) + " - destination : " + str(self.connection["destination"]))
 		print(self.data)
 		print(self.deads)
 		return 1

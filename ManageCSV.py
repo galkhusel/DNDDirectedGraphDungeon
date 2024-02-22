@@ -35,6 +35,13 @@ class File:
 					"adventurers" : [Adventurers, Adventurers_csv],
 					"main_party" : [Party, MainParty_csv]}
 		
+	def add_path_to_rooms(self, class_dictionary):
+
+		for path in class_dictionary["path"]:
+			origin = class_dictionary["path"][path].get_origin()
+			class_dictionary["room"][origin].add_path(class_dictionary["path"][path])
+			
+
 	def build(self):
 		
 		class_dictionary = {}
@@ -43,17 +50,21 @@ class File:
 			aux_dictionary = {}
 
 			class_file_path = self.dic[class_][1]
-			class_creator = self.dic[class_][1]
-			with open(PATH_LOAD + class_file_path) as path:
-			
-				for key in path:
-					entity = path[key]
-					object_ = class_creator(key, **entity)
+			class_creator = self.dic[class_][0]
+
+			with open(PATH_LOAD + class_file_path) as j:
+				json_ = json.load(j)
+				for key in json_:
+					entity = json_[key]
+					object_ = class_creator(key, *entity.values())
 					aux_dictionary[object_.get_name()] = object_
 
 			class_dictionary[class_] = aux_dictionary
+		self.add_path_to_rooms(class_dictionary)
 		return class_dictionary
 	
+	
+
 #	def save(self):
 #		for x in list:
 #			for row in csv:
