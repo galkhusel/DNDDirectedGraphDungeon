@@ -72,64 +72,58 @@ def build_location(pathscsv, locationscsv):
 
 	return position_dic
 
-def build_partys(partyscsv, mainpcsv, adventurerscsv):
+def build_partys(partyscsv, mainpcsv, adventurerscsv, position_dic):
+    main_party = None
+    party_dic = {}
 
-	main_party = None
-	party_dic = {}
+    with open(PATH_LOAD + partyscsv) as party, open(PATH_LOAD + mainpcsv) as mp, open(PATH_LOAD + adventurerscsv) as adven:
 
-	with open(PATH_LOAD + partyscsv) as party, open(PATH_LOAD + mainpcsv) as mp, open(PATH_LOAD + adventurerscsv) as adven:
+        partys = csv.reader(party)
+        mparty = csv.reader(mp)
+        adventurers = csv.reader(adven)
 
-		partys = csv.reader(party)
-		mparty = csv.reader(mp)
-		adventurers = csv.reader(adven)		
+        for x in partys:
+            if len(x) > 0:
+                party_dic[x[0]] = Party(
+                    name=x[0],
+                    description=x[1],
+                    room=position_dic[x[2]],
+                    side=ast.literal_eval(x[3]),
+                    alive=ast.literal_eval(x[4].strip()),
+                )
 
+        for x in adventurers:
+            if len(x) > 0:
+                if x[4] in party_dic:
+                    adv = Adventurers(
+                        name=x[0],
+                        health=x[1],
+                        max_health=x[2],
+                        cr=ast.literal_eval(x[3]),
+                        alive=ast.literal_eval(x[4]),
+                        heal_capacity=ast.literal_eval(x[6])
+                    )
 
-		for x in partys:
-			if len(x) > 0 :
-				#the strip is places in here to prevent save situation putting empty lines in the csv
-				party_dic[x[0]] = Party(
-					name = x[0],
-					description = x[1],
-					Room = x[4],
-					side = ast.literal_eval(x[5]),
-					alive = ast.literal_eval(x[6].strip()),
-					)
+                    party_dic[x[4]].add_adventurer(adv)
 
-		for x in adventurers:
-			if len(x) > 0 :
-				print(x[4])
+        main = next(mparty)
 
-				if x[4] in party_dic:
-					adv = Adventurers(
-						name = x[0], 
-						health = x[1], 
-						max_health = x[2],  
-						cr = ast.literal_eval(x[3]),
-						alive = ast.literal_eval(x[4]),
-						heal_capacity = ast.literal_eval(x[6])
-						)
-				
-					party_dic[x[4]].add_adventurer(adv)
+        main_party = Party(
+            name=main[0],
+            description=main[1],
+            room=position_dic[main[2]],
+            side=ast.literal_eval(main[3].strip()),
+            alive=True,
+        )
 
-		main = next(mparty)
+    return party_dic, main_party
 
-		main_party =  Party(
-				name = main[0],
-				description = main[1],
-				Room = main[2],
-				side = ast.literal_eval(main[3].strip()),
-				alive = True,
-				)
-		
-		print(main_party.get_room())
-
-	return party_dic, main_party
 
 def build_dungeon(paths, locations, partys, mainp, Adventurers):
 
 	position_dic = build_location(paths, locations)
 
-	party_dic, main_party = build_partys(partys, mainp, Adventurers)
+	party_dic, main_party = build_partys(partys, mainp, Adventurers, position_dic)
 
 	return position_dic, party_dic, main_party
 
@@ -183,7 +177,7 @@ def save_situation_main(main_party, maincsv, date):
 		row = [
 			main_party.get_name(),
 			main_party.get_description(),
-			main_party.get_room(),
+			main_party.get_room().get_name(),
 			main_party.get_side(),
 			]
 
@@ -202,7 +196,7 @@ def save_situation_party(party_dic, partyscsv, date):
 			row = [
 				party_dic[x].get_name(),
 				party_dic[x].get_description(),
-				party_dic[x].get_room(),
+				party_dic[x].get_room().get_name(),
 				party_dic[x].get_side(),
 				party_dic[x].get_alive(),
 				]
