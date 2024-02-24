@@ -156,9 +156,9 @@ def confrontation_outcomes(encounters, main_party,  partys, positions):
 
 def create_encounters_diccionary(main_party, partys):
 	encounters = {}
-	encounters[main_party.get_room()] = {main_party.get_name(): main_party}
+	encounters[main_party.get_room().get_name()] = {main_party.get_name(): main_party}
 	for x in partys:
-		position = partys[x].get_room()
+		position = partys[x].get_room().get_name()
 		if position in encounters:
 
 			encounters[position][partys[x].get_name()] = partys[x]
@@ -179,24 +179,22 @@ def other_party_movement(positions, partys):
 		if not partys[p_name].get_alive(): continue
 		print("other party movement")
 		#moving
-		actual_position = partys[p_name].get_room()
+		actual_position = partys[p_name].get_room().get_name()
 		print(actual_position)
 		list_connections = make_connection_list(positions, actual_position)
 		print(list_connections)
-		partys[p_name].random_travel(list_connections)
-
+		partys[p_name].random_travel(positions)
 		#adjusting power level of location
-		actual_location = positions[partys[p_name].get_room()]
+		actual_location = positions[partys[p_name].get_room().get_name()]
 
 		dungeon_logger.add_travel_history(actual_location, p_name)
 		print(partys[p_name].get_name())
-		print(partys[p_name].get_room())
+		print(partys[p_name].get_room().get_name())
 	return 1
 
 # party tries to move to an adjacent place if it can move it adjust the power level of that place 
 def main_party_travel(positions, main_party, travel):
-
-	actual_position = main_party.get_room()
+	actual_position = main_party.get_room().get_name()
 	list_ = list(positions[actual_position].get_connections())
 
 	if travel in list_:
@@ -214,7 +212,7 @@ def enter_dungeon(positions, partys, main_party):
 
 	while travel != "Quit":
 
-		positions[main_party.get_room()].show_info()
+		positions[main_party.get_room().get_name()].show_info()
 		print("travel to where?")
 		print("enter a path or Quit")
 		travel = input()
