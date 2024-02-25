@@ -95,6 +95,9 @@ class Adventurers(Entity):
 		self.cr = cr
 		self.heal_capacity = heal_capacity
 
+	def get_heal_capacity(self):
+		return self.heal_capacity
+	
 	def get_health(self):
 		return self.health
 

@@ -1,7 +1,7 @@
 import random
 import math
 from Classes import Path, Room, Party, Adventurers
-from ManageCSV import File, save_situation
+from ManageCSV import File
 from Lore import Logger
 import os
 import ast
@@ -281,7 +281,7 @@ def main():
 
 	print("saving progress")
 
-	
+
 	file.save(
 					position_dic, 
 					party_dic, 
