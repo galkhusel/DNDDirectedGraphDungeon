@@ -129,12 +129,16 @@ class Party(Entity):
 		self.description = description		
 		self.room = room
 		self.side = side
+
 		self.adventurers = {}
 
 
 	def add_adventurer(self, adventurer):
 		self.adventurers[adventurer.get_name()] = adventurer
-		
+
+	def remove_adventurer(self, adventurer):
+		return self.adventurers.pop(adventurer.get_name())
+
 	def show_info(self):
 		print(self.name + self.description + self.room)
 		return 1
@@ -178,6 +182,7 @@ class Party(Entity):
 	def travel(self, new_place):
 		self.set_room(new_place)
 		return new_place
+
 	
 	def random_travel(self, positions):
 		current_room = self.get_room()

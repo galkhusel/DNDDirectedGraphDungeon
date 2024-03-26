@@ -1,3 +1,4 @@
+
 dungeon : 
     main frame para laburar en el dungeon.
 
@@ -8,6 +9,7 @@ classes:
     location - vertices.
 lore : 
     historia de como se llevo a cabo el dungeon.
+
 
 
 min:
@@ -30,6 +32,7 @@ med:
 high:
 
     agregar un pathfinding bueno. arbol de decicion
+
 
 
 
