@@ -1,11 +1,11 @@
-{    "legoldenfishassociados" : {
-        "description" : "lopibe_riends", 
+{    "party1" : {
+        "description" : "party1", 
         "Room" : "p6", 
         "side" : true,
         "alive" : true
     },   
-    "else" : {
-        "description" : "lopibe", 
+    "party2" : {
+        "description" : "party2", 
         "Room" : "p6", 
         "side" : false,
         "alive" : true

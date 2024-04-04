@@ -267,8 +267,6 @@ def main():
 	position_dic = dic_["room"] | dic_["path"]
 	party_dic = dic_["party"]
 
-	print(position_dic)
-
 	main_party_name = list(dic_["mainParty"].keys())[0]
 	main_party = dic_["mainParty"][main_party_name]
 

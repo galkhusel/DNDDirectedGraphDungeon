@@ -38,6 +38,10 @@ class File:
 			origin = class_dictionary["path"][path].get_origin()
 			class_dictionary["room"][origin].add_path(class_dictionary["path"][path])
 			
+	def add_adventurers_to_party(self, dict):
+		for x in dict["adventurers"]:
+			dict["adventurers"][x]
+
 
 	def build(self):
 		
@@ -58,7 +62,9 @@ class File:
 
 			class_dictionary[class_] = aux_dictionary
 		self.add_path_to_rooms(class_dictionary)
+		self.add_adventurers_to_party(class_dictionary)
 		self.dungeon = class_dictionary
+		print(self.dungeon)
 		return self.dungeon
 	
 	def formar_diccionario(self, position_dic, party_dic, main_party):
@@ -67,14 +73,21 @@ class File:
 		path_dic = {}
 		Adventurers_csv = {}
 
+		print(party_dic)
 		for x in party_dic:
-			Adventurers_csv[x] = party_dic[x]
+			print(x)
+			print(party_dic[x].get_adventurers())
+			for adventurer in party_dic[x].get_adventurers():
+				print("entre")
+				
+				Adventurers_csv[adventurer] = party_dic[x].get_adventurers()[adventurer]
+		print(Adventurers_csv)
 
 		for x in position_dic:
 			if x.isdigit():
-				path_dic[x] = position_dic[x]
-			else:
 				room_dic[x] = position_dic[x]
+			else:
+				path_dic[x] = position_dic[x]
 
 		self.dungeon = {"path" : path_dic, 
 						"room" : room_dic,
@@ -90,14 +103,10 @@ class File:
 		
 		for class_ in self.dic:
 			class_file_path = self.dic[class_][1]
-			print(class_)
 			with open(PATH_SAVE + date + class_file_path + ".json", "w") as j:
 				data = {}
-				print(self.dungeon[class_])
 				for entity in self.dungeon[class_]:
-					print(entity)
-					print(self.dungeon[class_][entity].get_name())
-					# la siguiente linea rompe.
+					# la siguiente linea rompe.z
 					object = [getattr(self.dungeon[class_][entity], method)() for method in self.dic[class_][2]]
 					#esto flashea el formato
 					data[object[0]] = object[1:]
