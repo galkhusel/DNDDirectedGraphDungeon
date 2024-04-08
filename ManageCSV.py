@@ -28,7 +28,7 @@ class File:
 		self.dic = {"room" : [Room, Room_csv, ["get_name", "get_data", "get_deads"]],
 			  		"path" : [Path, Path_csv, ["get_name", "get_data", "get_deads", "get_origin", "get_destination"]],
 					"party" : [Party, Party_csv, ["get_name", "get_description", "get_room", "get_side", "get_alive"]],
-					"adventurers" : [Adventurers, Adventurers_csv, ["get_name", "get_health", "get_max_health", "get_cr", "get_alive", "get_heal_capacity"]],
+					"adventurers" : [Adventurers, Adventurers_csv, ["get_name", "get_health", "get_max_health", "get_cr", "get_alive", "get_heal_capacity", "get_party"]],
 					"mainParty" : [Party, MainParty_csv, ["get_name", "get_description", "get_room", "get_side", "get_alive"]]}
 		self.dungeon = {}
 		
@@ -39,8 +39,10 @@ class File:
 			class_dictionary["room"][origin].add_path(class_dictionary["path"][path])
 			
 	def add_adventurers_to_party(self, dict):
+
 		for x in dict["adventurers"]:
-			dict["adventurers"][x]
+			adventurer_party = dict["adventurers"][x].get_party()
+			dict["party"][adventurer_party].add_adventurer(dict["adventurers"][x])
 
 
 	def build(self):
@@ -73,15 +75,10 @@ class File:
 		path_dic = {}
 		Adventurers_csv = {}
 
-		print(party_dic)
 		for x in party_dic:
-			print(x)
-			print(party_dic[x].get_adventurers())
 			for adventurer in party_dic[x].get_adventurers():
-				print("entre")
-				
 				Adventurers_csv[adventurer] = party_dic[x].get_adventurers()[adventurer]
-		print(Adventurers_csv)
+
 
 		for x in position_dic:
 			if x.isdigit():
@@ -89,11 +86,13 @@ class File:
 			else:
 				path_dic[x] = position_dic[x]
 
+		main_party_dic = {main_party.get_name() : main_party}
+
 		self.dungeon = {"path" : path_dic, 
 						"room" : room_dic,
 						"party" : party_dic,
 						"adventurers" : Adventurers_csv,
-						"mainParty" : main_party
+						"mainParty" : main_party_dic
 						}
 
 	def save(self, position_dic, party_dic,	main_party):
@@ -105,9 +104,11 @@ class File:
 			class_file_path = self.dic[class_][1]
 			with open(PATH_SAVE + date + class_file_path + ".json", "w") as j:
 				data = {}
+				keys = [string.replace("get_", '') for string in self.dic[class_][2]]
 				for entity in self.dungeon[class_]:
-					# la siguiente linea rompe.z
+					
+					print(entity)
 					object = [getattr(self.dungeon[class_][entity], method)() for method in self.dic[class_][2]]
-					#esto flashea el formato
-					data[object[0]] = object[1:]
+					data[object[0]] = dict(zip(keys, object[1:]))
+
 				json.dump(data, j)

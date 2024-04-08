@@ -88,12 +88,13 @@ class Entity:
 		self.alive = alive
 
 class Adventurers(Entity):
-	def __init__(self, name, health, max_health, cr, alive, heal_capacity):
+	def __init__(self, name, health, max_health, cr, alive, heal_capacity, party):
 		super().__init__(name, alive)
 		self.health = health
 		self.max_health = max_health
 		self.cr = cr
 		self.heal_capacity = heal_capacity
+		self.party = party
 
 	def get_heal_capacity(self):
 		return self.heal_capacity
@@ -104,6 +105,8 @@ class Adventurers(Entity):
 	def set_health(self, value):
 		self.health = value
 
+	def get_party(self):
+		return self.party
 
 	def get_max_health(self):
 		return self.max_health

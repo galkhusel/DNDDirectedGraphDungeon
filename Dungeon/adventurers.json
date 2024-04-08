@@ -3,13 +3,15 @@
     "max_health": 85,
     "cr" : 10,
     "alive" : false , 
-    "heal_capacity" : 20
+    "heal_capacity" : 20,
+    "party" : "party1"
     },
 "ANDREI" : {
     "health" : 70,
     "max_health": 85,
     "cr" : 20,
     "alive" : true , 
-    "heal_capacity" : 30
+    "heal_capacity" : 30,
+    "party" : "party2"
     }
 }

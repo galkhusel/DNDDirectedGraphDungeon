@@ -1,12 +1,12 @@
 {    "party1" : {
         "description" : "party1", 
-        "Room" : "p6", 
+        "room" : "p6", 
         "side" : true,
         "alive" : true
     },   
     "party2" : {
         "description" : "party2", 
-        "Room" : "p6", 
+        "room" : "p6", 
         "side" : false,
         "alive" : true
     }
