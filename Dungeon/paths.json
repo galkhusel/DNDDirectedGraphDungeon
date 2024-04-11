@@ -39,5 +39,18 @@
     "deads" : [],
     "origin" : "5",
     "destination" : "1"
+    },
+"p7" : {
+    "descripcion" : "esta juani aca6?", 
+    "deads" : [],
+    "origin" : "8",
+    "destination" : "8"
+    },
+"p8" : {
+    "descripcion" : "esta juani aca6?", 
+    "deads" : [],
+    "origin" : "8",
+    "destination" : "8"
     }
+
 }

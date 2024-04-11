@@ -52,50 +52,31 @@ def calculate_outcome(partys):
 
 	return partys["allies"][1] - partys["enemies"][1]
 
-def main_party_encounters(party):
+def main_party_encounters(party, room):
 
 	resolution = 1
 
 	while resolution != "Finish":
 
-		print("enter a resolution : Finish, kill, revive, change-sides, logg")
+		print("enter a resolution : Finish, kill, revive, logg")
 
 		resolution = input()
 
 		if resolution == "Finish":
 			continue
 
-		print("enter position corresponding to party - ")
+		print("enter key in the position of the corresponding to party - ")
 		print(party)
 		party_input = input()
 
-		if  party_input not in party:
-			continue
-
 		if resolution == "kill":
-			party[party_input].set_alive(False)
+			print("entre kill")
+			party[party_input].party_destroy(room)
 
 
 		elif resolution == "revive":
+			print("entre kill")
 			party[party_input].set_alive(True)
-
-
-		elif resolution == "run":
-			print(resolution)
-			#chase?
-
-		elif resolution == "enemies run":
-			print(resolution)
-
-		elif resolution == "change-sides":
-
-			value = input()
-
-			if value != "True" or value != "False":
-
-				party[party_input].set_side(ast.literal_eval(value))
-			else:
-				party[party_input].set_side("")
 
 		elif resolution == "logg":
 			print("logging")
@@ -119,12 +100,17 @@ def confrontation_outcomes(encounters, main_party,  partys, positions):
 		print(encounters[x])
 		if len(encounters[x]) > 1:
 			deads = []
+
 			if main_party.get_name() in encounters[x]:
-				deads = main_party_encounters(encounters[x])
-				positions[x].add_deads(deads)
+				deads = main_party_encounters(encounters[x], x)
+
 			else:
 				deads = confrontation([partys[key] for key in encounters[x]])
-				positions[x].add_deads(deads)
+
+			if deads:
+				for dead in deads:
+					positions[x].add_deads(dead)
+
 			dungeon_logger.add_encounter_history(x, encounters[x], deads)
 
 def create_encounters_diccionary(main_party, partys):

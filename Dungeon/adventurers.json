@@ -2,7 +2,7 @@
     "health" : 85,
     "max_health": 85,
     "cr" : 10,
-    "alive" : false , 
+    "alive" : true , 
     "heal_capacity" : 20,
     "party" : "party1", 
     "resting_place": "null"

@@ -113,6 +113,6 @@ class File:
 					
 					print(entity)
 					object = [getattr(self.dungeon[class_][entity], method)() for method in self.dic[class_][2]]
-					data[object[0]] = dict(zip(keys, object[0:]))
+					data[object[0]] = dict(zip(keys[1:], object[1:]))
 
 				json.dump(data, j)

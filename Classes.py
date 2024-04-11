@@ -96,7 +96,7 @@ class Adventurers(Entity):
 		self.resting_place = resting_place
 		
 	def killed(self, resting_place):
-		self.restin_place = resting_place
+		self.resting_place = resting_place
 		self.set_alive(False)
 
 	def get_resting_place(self):
@@ -143,6 +143,14 @@ class Party(Entity):
 		self.side = side
 
 		self.adventurers = {}
+
+	def party_destroy(self, resting_place):
+		deads = []
+		for x in self.adventurers:
+			self.adventurers[x].killed(resting_place)
+			self.set_alive(False)
+			deads.append(x)
+		return deads
 
 	def add_adventurer(self, adventurer):
 		self.adventurers[adventurer.get_name()] = adventurer
