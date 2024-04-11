@@ -1,0 +1,43 @@
+{"p0" : {
+    "descripcion" : "esta juani aca0?", 
+    "deads" : [],
+    "origin" : "1",
+    "destination" : "2"
+    },
+"p1" : {
+    "descripcion" : "esta juani aca1?", 
+    "deads" : [],
+    "origin" : "2",
+    "destination" : "3"
+    },
+"p2" : {
+    "descripcion" : "esta juani aca2?", 
+    "deads" : [],
+    "origin" : "3",
+    "destination" : "1"
+    },
+"p3" : {
+    "descripcion" : "esta juani aca3?", 
+    "deads" : [],
+    "origin" : "3",
+    "destination" : "4"
+    },
+"p4" : {
+    "descripcion" : "esta juani aca4?", 
+    "deads" : [],
+    "origin" : "4",
+    "destination" : "5"
+    },
+"p5" : {
+    "descripcion" : "esta juani aca5?", 
+    "deads" : [],
+    "origin" : "1",
+    "destination" : "2"
+    },
+"p6" : {
+    "descripcion" : "esta juani aca6?", 
+    "deads" : [],
+    "origin" : "5",
+    "destination" : "1"
+    }
+}

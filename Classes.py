@@ -17,8 +17,8 @@ class Room:
 	def __init__(self, name, data, deads = []):
 		self.name = name
 		self.data = data
-		self.connection = {}
 		self.deads = deads
+		self.connection = {}
 
 	def get_name(self):
 		return self.name
@@ -39,6 +39,7 @@ class Room:
 		if path in self.connection.values(): return path 
 
 	def show_info(self):
+		print("entro")
 		print("currently in Room: " + self.name)
 		print("paths" + str(list(self.connection.keys())))
 		print(self.data)
@@ -49,8 +50,8 @@ class Room:
 		return list(self.connection.keys())
 
 class Path(Room):
-	def __init__(self, name, origin, destination, data):
-		super().__init__(name, data)
+	def __init__(self, name, data, deads, origin, destination):
+		super().__init__(name, data, deads)
 		self.connection["origin"] = origin
 		self.connection["destination"] = destination
 
@@ -64,8 +65,9 @@ class Path(Room):
 		return self.connection["destination"]
 	
 	def show_info(self):
+		print("entro show info path")
 		print("currently in path: " + self.name)
-		print("origin : " + self.connection["origin"] + " - destination : " + self.connection["destination"])
+		print("origin : " + str(self.connection["origin"]) + " - destination : " + str(self.connection["destination"]))
 		print(self.data)
 		print(self.deads)
 		return 1
@@ -86,19 +88,25 @@ class Entity:
 		self.alive = alive
 
 class Adventurers(Entity):
-	def __init__(self, name, health, max_health, cr, alive, heal_capacity):
+	def __init__(self, name, health, max_health, cr, alive, heal_capacity, party):
 		super().__init__(name, alive)
 		self.health = health
 		self.max_health = max_health
 		self.cr = cr
 		self.heal_capacity = heal_capacity
+		self.party = party
 
+	def get_heal_capacity(self):
+		return self.heal_capacity
+	
 	def get_health(self):
 		return self.health
 
 	def set_health(self, value):
 		self.health = value
 
+	def get_party(self):
+		return self.party
 
 	def get_max_health(self):
 		return self.max_health
@@ -120,8 +128,6 @@ class Adventurers(Entity):
 		else:
 			self.set_health(self.max_health)
 
-
-
 class Party(Entity):
 
 	def __init__(self,name, description, room, side : bool, alive):
@@ -131,7 +137,6 @@ class Party(Entity):
 		self.side = side
 
 		self.adventurers = {}
-
 
 	def add_adventurer(self, adventurer):
 		self.adventurers[adventurer.get_name()] = adventurer

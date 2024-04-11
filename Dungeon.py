@@ -1,7 +1,7 @@
 import random
 import math
 from Classes import Path, Room, Party, Adventurers
-from ManageCSV import build_dungeon, save_situation
+from ManageCSV import File
 from Lore import Logger
 import os
 import ast
@@ -229,9 +229,10 @@ def other_party_movement(positions, partys):
 def main_party_travel(positions, main_party, travel):
 	actual_position = main_party.get_room().get_name()
 	list_ = list(positions[actual_position].get_connections())
-
+	
 	if travel in list_:
 		#moving
+		
 		main_party.travel(positions[travel]) 	
 
 		return True
@@ -250,10 +251,6 @@ def enter_dungeon(positions, partys, main_party):
 		print("enter a path or Quit")
 		travel = input()
 
-
-
-		if travel == "Quit":
-			break
 
 		print()
 		print()
@@ -289,13 +286,22 @@ def main():
 
 	dungeon_logger.add_plain_text("ONCE AGAIN WE ENTER THE DUNGEON")
 
-	position_dic, party_dic, main_party = build_dungeon(
-														"paths.csv", 
-														"locations.csv", 
-														"partys.csv", 
-														"mainParty.csv", 
-														"adventurers.csv",
-														)
+	file = File("room.json", 
+				"paths.json", 
+				"partys.json", 
+				"adventurers.json",
+				"mainParty.json", 
+				)
+
+	dic_ = file.build()
+
+	position_dic = dic_["room"] | dic_["path"]
+	party_dic = dic_["party"]
+
+	main_party_name = list(dic_["mainParty"].keys())[0]
+	main_party = dic_["mainParty"][main_party_name]
+
+	print(main_party.get_room())
 
 	enter_dungeon(
 				position_dic, 
@@ -303,20 +309,14 @@ def main():
 				main_party)
 
 	print("saving progress")
-	save_situation(
+
+
+	file.save(
 					position_dic, 
 					party_dic, 
 					main_party, 
-					"paths.csv", 
-					"locations.csv", 
-					"partys.csv", 
-					"mainParty.csv", 
-					"adventurers.csv",
 					)
 	
 
 if __name__ == '__main__':
 	main()
-
-
-

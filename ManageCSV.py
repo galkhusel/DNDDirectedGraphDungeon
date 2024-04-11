@@ -21,228 +21,94 @@ PATH_SAVE = "Dungeon_Updated\\"
 ====================================================================================================					
 ====================================================================================================
 """
-# armar clase csv manager.
 
-class csv_manager:
-	def __innit__(self, Room, Path, Party, Adventurers):
-		self.Room
-		self.Path
-		self.Party
-		self.Adventurers
-		return 1
+
+class File:
+	def __init__(self, Room_csv, Path_csv, Party_csv, Adventurers_csv, MainParty_csv):
+		self.dic = {"room" : [Room, Room_csv, ["get_name", "get_data", "get_deads"]],
+			  		"path" : [Path, Path_csv, ["get_name", "get_data", "get_deads", "get_origin", "get_destination"]],
+					"party" : [Party, Party_csv, ["get_name", "get_description", "get_room", "get_side", "get_alive"]],
+					"adventurers" : [Adventurers, Adventurers_csv, ["get_name", "get_health", "get_max_health", "get_cr", "get_alive", "get_heal_capacity", "get_party"]],
+					"mainParty" : [Party, MainParty_csv, ["get_name", "get_description", "get_room", "get_side", "get_alive"]]}
+		self.dungeon = {}
+		
+	def add_path_to_rooms(self, class_dictionary):
+
+		for path in class_dictionary["path"]:
+			origin = class_dictionary["path"][path].get_origin()
+			class_dictionary["room"][origin].add_path(class_dictionary["path"][path])
+			
+	def add_adventurers_to_party(self, dict):
+
+		for x in dict["adventurers"]:
+			adventurer_party = dict["adventurers"][x].get_party()
+			dict["party"][adventurer_party].add_adventurer(dict["adventurers"][x])
+
+
+	def build(self):
+		
+		class_dictionary = {}
+
+		for class_ in self.dic:
+			aux_dictionary = {}
+
+			class_file_path = self.dic[class_][1]
+			class_creator = self.dic[class_][0]
+
+			with open(PATH_LOAD + class_file_path) as j:
+				json_ = json.load(j)
+				for key in json_:
+					entity = json_[key]
+					object_ = class_creator(key, *entity.values())
+					aux_dictionary[object_.get_name()] = object_
+
+			class_dictionary[class_] = aux_dictionary
+		self.add_path_to_rooms(class_dictionary)
+		self.add_adventurers_to_party(class_dictionary)
+		self.dungeon = class_dictionary
+		print(self.dungeon)
+		return self.dungeon
 	
-	def build():
-		return 1
-	
-	def save():
-		return 1
-
-
-
-def build_location(pathscsv, locationscsv):
-
-	position_dic = {}
-
-	with open(PATH_LOAD + pathscsv) as path, open(PATH_LOAD + locationscsv) as location:
-
-		paths = csv.reader(path)
-		locations = csv.reader(location)
-
-
-		for x in locations:
-			if len(x) > 0 :
-				position_dic[x[0]] = Room(
-					name = x[0],
-					data = x[1],
-					)
-
-		for x in paths:
-			if len(x) > 0 :			
-				p = Path(
-
-					origin = x[0],
-					destination = x[1],
-					name = x[2],
-					data = x[3],
-					)
-
-			position_dic[p.get_name()] = p
-			position_dic[p.get_origin()].add_path(p)
-
-
-	return position_dic
-
-def build_partys(partyscsv, mainpcsv, adventurerscsv, position_dic):
-    main_party = None
-    party_dic = {}
-
-    with open(PATH_LOAD + partyscsv) as party, open(PATH_LOAD + mainpcsv) as mp, open(PATH_LOAD + adventurerscsv) as adven:
-
-        partys = csv.reader(party)
-        mparty = csv.reader(mp)
-        adventurers = csv.reader(adven)
-
-        for x in partys:
-            if len(x) > 0:
-                party_dic[x[0]] = Party(
-                    name=x[0],
-                    description=x[1],
-                    room=position_dic[x[2]],
-                    side=ast.literal_eval(x[3]),
-                    alive=ast.literal_eval(x[4].strip()),
-                )
-
-        for x in adventurers:
-            if len(x) > 0:
-                if x[4] in party_dic:
-                    adv = Adventurers(
-                        name=x[0],
-                        health=x[1],
-                        max_health=x[2],
-                        cr=ast.literal_eval(x[3]),
-                        alive=ast.literal_eval(x[4]),
-                        heal_capacity=ast.literal_eval(x[6])
-                    )
-
-                    party_dic[x[4]].add_adventurer(adv)
-
-        main = next(mparty)
-
-        main_party = Party(
-            name=main[0],
-            description=main[1],
-            room=position_dic[main[2]],
-            side=ast.literal_eval(main[3].strip()),
-            alive=True,
-        )
-
-    return party_dic, main_party
-
-
-def build_dungeon(paths, locations, partys, mainp, Adventurers):
-
-	position_dic = build_location(paths, locations)
-
-	party_dic, main_party = build_partys(partys, mainp, Adventurers, position_dic)
-
-	return position_dic, party_dic, main_party
-
-"""
-====================================================================================================
-====================================================================================================
-								
-
-								save instance functions
-
-====================================================================================================					
-====================================================================================================
-"""
-
-
-def save_situation_adventurers(party_dic, adventurerscsv, date):
-
-
-	with open(PATH_SAVE + date+adventurerscsv, 'a', newline='') as party:
-
-		writer = csv.writer(party)
-
+	def formar_diccionario(self, position_dic, party_dic, main_party):
+		
+		room_dic = {}
+		path_dic = {}
+		Adventurers_csv = {}
 
 		for x in party_dic:
-
-			adventurers = party_dic[x].get_adventurers()
-			for adventurer in adventurers:
-			
-
-				row = [	
-					adventurers[adventurer].get_name(),
-					adventurers[adventurer].get_health(),
-					adventurers[adventurer].get_max_health(),
-					adventurers[adventurer].get_cr(),
-					adventurers[adventurer].get_alive(),
-					x,
-				]
-				
-				print(row)
-				writer.writerow(row)
-
-	return 1
-
-def save_situation_main(main_party, maincsv, date):
-
-	with open(PATH_SAVE + date+maincsv, 'a', newline='') as mainparty:
-
-		writer = csv.writer(mainparty)
-		print(main_party)
-			
-		row = [
-			main_party.get_name(),
-			main_party.get_description(),
-			main_party.get_room().get_name(),
-			main_party.get_side(),
-			]
-
-		writer.writerow(row)
-
-	return 1
-
-def save_situation_party(party_dic, partyscsv, date):
-
-	with open(PATH_SAVE + date+partyscsv, 'a', newline='') as party:
-
-		writer = csv.writer(party)
-		#print(party_dic)
-		for x in party_dic:
-			
-			row = [
-				party_dic[x].get_name(),
-				party_dic[x].get_description(),
-				party_dic[x].get_room().get_name(),
-				party_dic[x].get_side(),
-				party_dic[x].get_alive(),
-				]
-
-			writer.writerow(row)
-
-	return 1
-
-def writepath(path_object , path):
-
-	path.writerow([
-		path_object.get_name(),
-		path_object.get_origin(),
-		path_object.get_destination(),
-		path_object.get_data(),
-		])
-
-def writelocation(location_object , location):
-	
-	location.writerow([
-		location_object.get_name(),
-		location_object.get_data(),
-		])
-
-def save_situation_position(position_dic, pathcsv, locationcsv, date):
-
-	with open(PATH_SAVE + date+pathcsv, 'a', newline='') as path, open(PATH_SAVE + date+locationcsv, 'w', newline='') as location :
-
-		paths = csv.writer(path)
-		locations = csv.writer(location)
+			for adventurer in party_dic[x].get_adventurers():
+				Adventurers_csv[adventurer] = party_dic[x].get_adventurers()[adventurer]
 
 
 		for x in position_dic:
-			
 			if x.isdigit():
-				writelocation(position_dic[x], locations)
-
+				room_dic[x] = position_dic[x]
 			else:
-				writepath(position_dic[x], paths)
+				path_dic[x] = position_dic[x]
 
-	return 1
+		main_party_dic = {main_party.get_name() : main_party}
 
-def save_situation(position_dic, party_dic, main_party, pathcsv, locationcsv, partyscsv, maincsv, adventurerscsv):
+		self.dungeon = {"path" : path_dic, 
+						"room" : room_dic,
+						"party" : party_dic,
+						"adventurers" : Adventurers_csv,
+						"mainParty" : main_party_dic
+						}
 
-	date = str(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M'))
-	save_situation_adventurers(party_dic, adventurerscsv, date)
-	save_situation_main(main_party, maincsv, date)
-	save_situation_party(party_dic, partyscsv, date)
-	save_situation_position(position_dic, pathcsv, locationcsv, date)
+	def save(self, position_dic, party_dic,	main_party):
+		
+		self.formar_diccionario(position_dic , party_dic,	main_party)
+		date = str(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M'))
+		
+		for class_ in self.dic:
+			class_file_path = self.dic[class_][1]
+			with open(PATH_SAVE + date + class_file_path + ".json", "w") as j:
+				data = {}
+				keys = [string.replace("get_", '') for string in self.dic[class_][2]]
+				for entity in self.dungeon[class_]:
+					
+					print(entity)
+					object = [getattr(self.dungeon[class_][entity], method)() for method in self.dic[class_][2]]
+					data[object[0]] = dict(zip(keys, object[1:]))
+
+				json.dump(data, j)

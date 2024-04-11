@@ -1,0 +1,13 @@
+{    "party1" : {
+        "description" : "party1", 
+        "room" : "p6", 
+        "side" : true,
+        "alive" : true
+    },   
+    "party2" : {
+        "description" : "party2", 
+        "room" : "p6", 
+        "side" : false,
+        "alive" : true
+    }
+}

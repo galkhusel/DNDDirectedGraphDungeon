@@ -1,0 +1,8 @@
+{
+    "legoldenfish" : {
+        "description" : "lopibe", 
+        "room" : "p6", 
+        "side" : true,
+        "alive" : true
+    }
+}
