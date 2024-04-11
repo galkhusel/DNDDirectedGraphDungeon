@@ -194,8 +194,6 @@ class Party(Entity):
 		return new_place
 
 	def random_travel(self, Rooms):
-		print("entre")
-		print(Rooms)
 		self.set_room(random.choice(Rooms))
 
 	def calculate_damage(self):

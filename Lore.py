@@ -18,14 +18,18 @@ class Logger:
             self.travel_history[location].append(party)
 
     def add_encounter_history(self, location, party, deads): 
-        if location not in self.travel_history:
-            self.travel_history[location] = [(party, deads)]
+        if location not in self.encounter_history:
+            self.encounter_history[location] = [(party, deads)]
         else:
-            self.travel_history[location].append((party, deads))   
+            self.encounter_history[location].append((party, deads))   
 
     def prepare_encounter_history(self):
         for x in self.encounter_history:
-            confrontations = (", ").join(self.encounter_history[x][0]) + " fought at " + x + " and " + (", ").join(self.encounter_history[x][1]) + " died."
+            print("encounters")
+            print(x)
+            print(self.encounter_history[x][0][0])
+
+            confrontations = (", ").join(self.encounter_history[x][0][0]) + " fought at " + x + " and " + (", ").join(self.encounter_history[x][0][1]) + " died."
             if x not in self.text_list:
                 self.text_list[x] = [confrontations]
             else:
@@ -39,6 +43,7 @@ class Logger:
             else:
                 self.text_list[x].append(arrived)   
 
+
     def add_plain_text(self, msg):
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         with open('dungeon_crawl.log', 'a') as log_file:
@@ -49,6 +54,7 @@ class Logger:
         """
         Logs messages related to the dungeon crawl.
         """
+        print(self.encounter_history)
         self.prepare_travel_write()
         self.prepare_encounter_history()
         

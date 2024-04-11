@@ -66,12 +66,6 @@ def calculate_outcome(partys):
 	for x in partys["enemies"]:
 		enemy_damage += partys["enemies"][x].calculate_damage()
 
-	print("allied damage")
-	print(allied_damage)
-
-	print("enemies damage")
-	print(enemy_damage)
-
 	return allied_damage - enemy_damage
 
 def apply_damage(partys, damage, room):
@@ -96,20 +90,15 @@ def discriminate_partys(partys):
 def confrontation(partys, room):
 	#divide in if has main party or not
 
-
-	print("partys---------------")
-	print(partys)
-
 	divided_partys = discriminate_partys(partys)
 	dead = []
 	
 	if len(divided_partys["allies"]) == 0 or len(divided_partys["enemies"]) == 0:
 		return dead
 
-
 	outcome = calculate_outcome(divided_partys)
 
-	print("outcome")
+	print("-----------outcome-----------")
 	print(outcome)
 	
 	if outcome < 0:
@@ -126,8 +115,8 @@ def confrontation(partys, room):
 def confrontation_outcomes(encounters, main_party,  partys, positions):
 
 	for x in encounters:
-		print("encounters---------")
-		print(encounters[x])
+		print("-----------encounter-----------")
+		print(encounters[x].keys())
 		if len(encounters[x]) > 1:
 			deads = []
 
@@ -136,12 +125,12 @@ def confrontation_outcomes(encounters, main_party,  partys, positions):
 
 			else:
 				deads = confrontation([partys[key] for key in encounters[x]], positions[x])
-			print(deads)
+
 			if deads:
 				for dead in deads:
 					positions[x].add_deads(dead)
 
-			dungeon_logger.add_encounter_history(x, encounters[x], deads)
+			dungeon_logger.add_encounter_history(x, list(encounters[x].keys()), deads)
 
 def create_encounters_diccionary(main_party, partys):
 	encounters = {}
@@ -166,20 +155,12 @@ def other_party_movement(positions, partys):
 	
 	for p_name in partys:
 		if not partys[p_name].get_alive(): continue
-		print("other party movement")
-		#moving
 		actual_position = partys[p_name].get_room()
-		print(actual_position)
 		list_connections = make_connection_list(positions, actual_position)
-
 		partys[p_name].random_travel(list_connections)
-
-
 		actual_location = positions[partys[p_name].get_room()]
+		dungeon_logger.add_travel_history(actual_location.get_name(), p_name)
 
-		dungeon_logger.add_travel_history(actual_location, p_name)
-		print(partys[p_name].get_name())
-		print(partys[p_name].get_room())
 	return 1
 
 # party tries to move to an adjacent place if it can move it adjust the power level of that place 
@@ -191,7 +172,8 @@ def main_party_travel(positions, main_party, travel):
 	if travel in list_:
 		#moving
 		
-		main_party.travel(positions[travel].get_name()) 	
+		main_party.travel(positions[travel].get_name()) 
+		dungeon_logger.add_travel_history(positions[travel].get_name(), main_party.get_name())	
 		return True
 	else:
 		print(travel + "not found")
@@ -200,7 +182,6 @@ def main_party_travel(positions, main_party, travel):
 def heal(partys):
 	for x in partys:
 		partys[x].party_healing()
-
 
 def enter_dungeon(positions, partys, main_party):
 		
@@ -222,23 +203,19 @@ def enter_dungeon(positions, partys, main_party):
 		print("--------------------")	
 		if main_party_travel(positions, main_party, travel) != True:
 			continue
-		
-		dungeon_logger.add_travel_history(travel, main_party.get_name())
-		
-		
 
 		other_party_movement(positions, partys)
 		calculate_status(positions, main_party , partys)
 
-		heal_counter += 1
+		
 
 		if heal_counter == 5: 
 			heal(partys)
 			heal_counter = 0
 			print("partys healed")
+		heal_counter += 1
 
-
-		#dungeon_logger.resolve_round()
+		dungeon_logger.resolve_round()
 
 """
 ====================================================================================================
@@ -282,8 +259,7 @@ def main():
 					position_dic, 
 					party_dic, 
 					main_party, 
-					)
-	
+					)	
 
 if __name__ == '__main__':
 	main()
