@@ -102,13 +102,13 @@ class TestParty(unittest.TestCase):
         self.adventurer1 = Adventurers("tannae", 100, 150, 20, True, 2)
         self.adventurer2 = Adventurers("errol", 40, 57 , 5 ,True, 10)
         self.Room = Room('1', 'starting location')
-        self.party = Party("Party 1", "Some description","1" , True, True)
+        self.party = Party("Party 1", "Some description",self.Room , True, True)
         self.party.add_adventurer(self.adventurer1)
         self.party.add_adventurer(self.adventurer2)
 
 
     def test_get_location(self):
-        self.assertEqual(self.party.get_room(), "1")
+        self.assertEqual(self.party.get_room().get_name(), "1")
 
     def test_get_name(self):
         self.assertEqual(self.party.get_name(), "Party 1")
@@ -122,7 +122,7 @@ class TestParty(unittest.TestCase):
     def test_travel(self):
         self.new_location = Room("2", "Some data")
         self.party.travel(self.new_location)
-        self.assertEqual(self.party.get_room(), "2")
+        self.assertEqual(self.party.get_room().get_name(), "2")
 
 class TestMain(unittest.TestCase):
 
