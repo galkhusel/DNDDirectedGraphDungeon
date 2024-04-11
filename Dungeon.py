@@ -22,39 +22,14 @@ def make_connection_list(positions, actual_position):
 	for x in list_aux:
 		list_connections.append(positions[x].get_name())
 	return list_connections
-def apply_damage(partys, damage):
-	
-	# add how much damage main party can do
-	dead = []
-	amount_partys = len(partys)
-	counter_dead_partys = 0
-	while damage > 0:
-		party = random.choice(partys)
-		if party.get_alive():
-			damage -= 1
-	return dead
-def create_party_lists(partys):
-	allies = 0
-	allies_list = []
-	enemies = 0
-	enemies_list = []
-	for x in partys:
-		if x.get_side():
-			allies += x.get_power()
-			allies_list.append(x)
-		elif not x.get_side():
-			enemies += x.get_power()
-			enemies_list.append(x)
-	return {"allies" :  (allies_list, allies),
-			"enemies":	(enemies_list, enemies),
-	}
-def calculate_outcome(partys):
-
-	return partys["allies"][1] - partys["enemies"][1]
 
 def main_party_encounters(party, room):
 
 	resolution = 1
+
+	for x in party:
+		party[x].show_status()
+
 
 	while resolution != "Finish":
 
@@ -82,21 +57,76 @@ def main_party_encounters(party, room):
 			print("logging")
 			dungeon_logger.add_plain_text(input())
 
-def confrontation(partys):
+def calculate_outcome(partys):
+	allied_damage = 0
+	enemy_damage = 0
+	for x in partys["allies"]:
+		allied_damage += partys["allies"][x].calculate_damage()
+
+	for x in partys["enemies"]:
+		enemy_damage += partys["enemies"][x].calculate_damage()
+
+	print("allied damage")
+	print(allied_damage)
+
+	print("enemies damage")
+	print(enemy_damage)
+
+	return allied_damage - enemy_damage
+
+def apply_damage(partys, damage, room):
+
+	damage_divided = abs(damage // len(partys))
+	deads = []
+	for x in partys:
+		deads.extend(partys[x].distribute_damage(damage_divided, room))
+	return deads
+
+def discriminate_partys(partys):
+
+	discriminated = {"allies":{}, "enemies":{}}
+
+	for x in partys:
+		if x.get_side():
+			discriminated["allies"][x.get_name()] = x
+		else:
+			discriminated["enemies"][x.get_name()] = x
+	return discriminated
+
+def confrontation(partys, room):
 	#divide in if has main party or not
 
-	dead = []
+
+	print("partys---------------")
 	print(partys)
-	outcome = calculate_outcome(partys)
-	if outcome < 0:
-		apply_damage(partys["allies"], outcome)
-	elif outcome > 0:
-		apply_damage(partys["enemies"], outcome)
+
+	divided_partys = discriminate_partys(partys)
+	dead = []
 	
+	if len(divided_partys["allies"]) == 0 or len(divided_partys["enemies"]) == 0:
+		return dead
+
+
+	outcome = calculate_outcome(divided_partys)
+
+	print("outcome")
+	print(outcome)
+	
+	if outcome < 0:
+		dead.extend(apply_damage(divided_partys["allies"], outcome, room))
+		dead.extend(apply_damage(divided_partys["enemies"], outcome//2, room))
+	elif outcome > 0:
+		dead.extend(apply_damage(divided_partys["enemies"], outcome, room))
+		dead.extend(apply_damage(divided_partys["allies"], outcome//2, room))
+	
+	print("deads")
+	print(dead)
 	return dead
+
 def confrontation_outcomes(encounters, main_party,  partys, positions):
 
 	for x in encounters:
+		print("encounters---------")
 		print(encounters[x])
 		if len(encounters[x]) > 1:
 			deads = []
@@ -105,8 +135,8 @@ def confrontation_outcomes(encounters, main_party,  partys, positions):
 				deads = main_party_encounters(encounters[x], x)
 
 			else:
-				deads = confrontation([partys[key] for key in encounters[x]])
-
+				deads = confrontation([partys[key] for key in encounters[x]], positions[x])
+			print(deads)
 			if deads:
 				for dead in deads:
 					positions[x].add_deads(dead)
@@ -116,10 +146,12 @@ def confrontation_outcomes(encounters, main_party,  partys, positions):
 def create_encounters_diccionary(main_party, partys):
 	encounters = {}
 	encounters[main_party.get_room()] = {main_party.get_name(): main_party}
+
 	for x in partys:
+		if not partys[x].get_alive():
+			continue
 		position = partys[x].get_room()
 		if position in encounters:
-
 			encounters[position][partys[x].get_name()] = partys[x]
 		else:
 			encounters[position] = {partys[x].get_name() : partys[x]}
@@ -164,10 +196,18 @@ def main_party_travel(positions, main_party, travel):
 	else:
 		print(travel + "not found")
 		return False
+
+def heal(partys):
+	for x in partys:
+		partys[x].party_healing()
+
+
 def enter_dungeon(positions, partys, main_party):
 		
 	travel = 1
 
+	heal_counter = 0
+	
 	while travel != "Quit":
 		print(main_party.get_room())
 		positions[main_party.get_room()].show_info()
@@ -185,8 +225,19 @@ def enter_dungeon(positions, partys, main_party):
 		
 		dungeon_logger.add_travel_history(travel, main_party.get_name())
 		
+		
+
 		other_party_movement(positions, partys)
 		calculate_status(positions, main_party , partys)
+
+		heal_counter += 1
+
+		if heal_counter == 5: 
+			heal(partys)
+			heal_counter = 0
+			print("partys healed")
+
+
 		#dungeon_logger.resolve_round()
 
 """
@@ -197,11 +248,6 @@ def enter_dungeon(positions, partys, main_party):
 ====================================================================================================					
 ====================================================================================================
 """
-
-
-
-
-
 
 def main():
 

@@ -96,7 +96,7 @@ class Adventurers(Entity):
 		self.resting_place = resting_place
 		
 	def killed(self, resting_place):
-		self.resting_place = resting_place
+		self.resting_place = resting_place.get_name()
 		self.set_alive(False)
 
 	def get_resting_place(self):
@@ -162,6 +162,11 @@ class Party(Entity):
 		print(self.name + self.description + self.room)
 		return 1
 
+	def show_status(self):
+		"""show per adventurer hp/totalhp or if death where"""
+		"""show party details"""
+		return 1
+
 	def get_room(self):
 		return self.room
 
@@ -205,11 +210,16 @@ class Party(Entity):
 	def distribute_damage(self, damage, resting_place):
 		alive = self.get_adventurers_alive()
 		distributed_damage = damage // len(alive)
+
 		dead = []
 		for x in alive:
-			x.deal_damage(distributed_damage)
+			x.deal_damage(distributed_damage, resting_place)
 			if not x.get_alive():
 				dead.append(x.get_name())
 		if len(dead) == len(alive):
 			self.set_alive(False)
 		return dead
+
+	def party_healing(self):
+		for x in self.adventurers:
+			self.adventurers[x].self_heal()

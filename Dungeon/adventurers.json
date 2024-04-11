@@ -1,19 +1,46 @@
 {"tannae":{
-    "health" : 85,
-    "max_health": 85,
+    "health" : 5,
+    "max_health": 100,
     "cr" : 10,
     "alive" : true , 
     "heal_capacity" : 20,
     "party" : "party1", 
     "resting_place": "null"
     },
+"errol":{
+        "health" : 5,
+        "max_health": 100,
+        "cr" : 10,
+        "alive" : true , 
+        "heal_capacity" : 20,
+        "party" : "party3", 
+        "resting_place": "null"
+        },
 "ANDREI" : {
-    "health" : 70,
-    "max_health": 85,
-    "cr" : 20,
+    "health" : 5,
+    "max_health": 15,
+    "cr" : 30,
     "alive" : true , 
     "heal_capacity" : 30,
     "party" : "party2",
+    "resting_place" : "null"
+    },
+"Clearence" : {
+    "health" : 15,
+    "max_health": 100,
+    "cr" : 20,
+    "alive" : true , 
+    "heal_capacity" : 30,
+    "party" : "party4",
+    "resting_place" : "null"
+    },
+"Clearence2" : {
+    "health" : 15,
+    "max_health": 100,
+    "cr" : 20,
+    "alive" : true , 
+    "heal_capacity" : 30,
+    "party" : "party4",
     "resting_place" : "null"
     }
 }

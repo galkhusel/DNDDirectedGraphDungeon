@@ -9,5 +9,17 @@
         "room" : "p7", 
         "side" : false,
         "alive" : true
+    },
+    "party3" : {
+        "description" : "party3", 
+        "room" : "p7", 
+        "side" : true,
+        "alive" : true
+    },
+    "party4" : {
+        "description" : "party4", 
+        "room" : "p3", 
+        "side" : true,
+        "alive" : true
     }
 }
