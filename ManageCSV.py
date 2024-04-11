@@ -66,7 +66,11 @@ class File:
 		self.add_path_to_rooms(class_dictionary)
 		self.add_adventurers_to_party(class_dictionary)
 		self.dungeon = class_dictionary
-		print(self.dungeon)
+		print("--------------------")
+		print("--------------------")	
+		print("dungeon loaded")
+		print("--------------------")
+		print("--------------------")	
 		return self.dungeon
 	
 	def formar_diccionario(self, position_dic, party_dic, main_party):

@@ -11,13 +11,13 @@ class TestRoom(unittest.TestCase):
         self.Room = Room('1', 'starting location')
         
     def test_add_path(self):
-        path = Path('path','start', 'end',  'path between start and end')
+        path = Path('path', 'path between start and end', [],'start', 'end')
         self.Room.add_path(path)
         self.assertIn('path', self.Room.get_connections())
         
     def test_get_connections(self):
-        path1 = Path('path1', 'start', 'end1', 'path between start and end1')
-        path2 = Path('path2', 'start', 'end2', 'path between start and end2')
+        path1 = Path('path1', 'path between start and end1', [],'start1', 'end1'  )
+        path2 = Path('path2', 'path between start and end2', [],'start2', 'end2'  )
         self.Room.add_path(path1)
         self.Room.add_path(path2)
         self.assertCountEqual(['path1', 'path2'], self.Room.get_connections())
@@ -38,7 +38,7 @@ class TestRoom(unittest.TestCase):
 class TestPath(unittest.TestCase):
     
     def setUp(self):
-        self.path = Path('path','start', 'end', 'path between start and end')
+        self.path = Path('path', 'path between start and end', [],'start', 'end')
         
     def test_get_connections(self):
         self.assertCountEqual(['start', 'end'], self.path.get_connections())
@@ -66,7 +66,7 @@ class TestPath(unittest.TestCase):
 class TestAdventurer(unittest.TestCase):
 
     def setUp(self):
-        self.adventurer = Adventurers("tannae", 2, 5, 20, True, 2)
+        self.adventurer = Adventurers("tannae", 2, 5, 20, True, 2, "ww")
 
     def test_deal_damage(self):
         self.adventurer.deal_damage(1)
@@ -99,8 +99,8 @@ class TestAdventurer(unittest.TestCase):
 class TestParty(unittest.TestCase):
 
     def setUp(self):
-        self.adventurer1 = Adventurers("tannae", 100, 150, 20, True, 2)
-        self.adventurer2 = Adventurers("errol", 40, 57 , 5 ,True, 10)
+        self.adventurer1 = Adventurers("tannae", 100, 150, 20, True, 2, "ww")
+        self.adventurer2 = Adventurers("errol", 40, 57 , 5 ,True, 10, "ww")
         self.Room = Room('1', 'starting location')
         self.party = Party("Party 1", "Some description",self.Room , True, True)
         self.party.add_adventurer(self.adventurer1)
@@ -127,7 +127,7 @@ class TestParty(unittest.TestCase):
 class TestMain(unittest.TestCase):
 
     def setUp(self):
-        self.Room = Location("1", "Some data", 5, 8)
+        self.Room = Room("1", "Some data", 5, 8)
         self.party = Party("Party 1", "Some description", 5, 7, "1" , True, {"member1":  {"alive": True, "condition": "Normal"}, "member2": {"alive": False, "condition": "Dead"}})
 
 if __name__ == '__main__':

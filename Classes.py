@@ -39,7 +39,6 @@ class Room:
 		if path in self.connection.values(): return path 
 
 	def show_info(self):
-		print("entro")
 		print("currently in Room: " + self.name)
 		print("paths" + str(list(self.connection.keys())))
 		print(self.data)
@@ -65,7 +64,6 @@ class Path(Room):
 		return self.connection["destination"]
 	
 	def show_info(self):
-		print("entro show info path")
 		print("currently in path: " + self.name)
 		print("origin : " + str(self.connection["origin"]) + " - destination : " + str(self.connection["destination"]))
 		print(self.data)
@@ -184,19 +182,12 @@ class Party(Entity):
 		print("the party has {}".format(self.adventurers))
 		return 1
 
+
 	def travel(self, new_place):
-		self.set_room(new_place)
+		self.room = new_place
 		return new_place
 
-	
-	def random_travel(self, positions):
-		current_room = self.get_room()
-		available_paths = current_room.get_connections()
-		if available_paths:
-			random_path = random.choice(available_paths)
-			self.set_room(positions[random_path])
-			return positions[random_path]
-		else:
-			print("No available paths from the current room.")
-			return None
-		
+	def random_travel(self, Rooms):
+		print("entre")
+		print(Rooms)
+		self.set_room(random.choice(Rooms))
