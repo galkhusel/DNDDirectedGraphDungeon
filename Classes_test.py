@@ -99,8 +99,8 @@ class TestAdventurer(unittest.TestCase):
 class TestParty(unittest.TestCase):
 
     def setUp(self):
-        self.adventurer1 = Adventurers("tannae", 100, 150, 20, True, 2, "ww")
-        self.adventurer2 = Adventurers("errol", 40, 57 , 5 ,True, 10, "ww")
+        self.adventurer1 = Adventurers("tannae", 100, 150, 20, True, 2, "ww",  "None")
+        self.adventurer2 = Adventurers("errol", 40, 57 , 5 ,True, 10, "ww", "None")
         self.Room = Room('1', 'starting location')
         self.party = Party("Party 1", "Some description",self.Room , True, True)
         self.party.add_adventurer(self.adventurer1)
@@ -123,6 +123,18 @@ class TestParty(unittest.TestCase):
         self.new_location = Room("2", "Some data")
         self.party.travel(self.new_location)
         self.assertEqual(self.party.get_room().get_name(), "2")
+    
+    def test_damage(self):
+        self.party.distribute_damage(40)
+        self.assertEqual(self.adventurer1.get_health(), 80)
+        self.assertEqual(self.adventurer2.get_health(), 20)
+
+    def test_deads(self):
+        deads = self.party.distribute_damage(80)
+        self.assertEqual(self.adventurer1.get_health(), 60)
+        self.assertEqual(self.adventurer2.get_health(), 0)
+        self.assertEqual(self.adventurer2.get_alive(), False)
+        self.assertEqual(deads[0].get_name(), "errol")
 
 class TestMain(unittest.TestCase):
 

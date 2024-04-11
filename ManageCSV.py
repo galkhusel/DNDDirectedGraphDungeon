@@ -28,7 +28,7 @@ class File:
 		self.dic = {"room" : [Room, Room_csv, ["get_name", "get_data", "get_deads"]],
 			  		"path" : [Path, Path_csv, ["get_name", "get_data", "get_deads", "get_origin", "get_destination"]],
 					"party" : [Party, Party_csv, ["get_name", "get_description", "get_room", "get_side", "get_alive"]],
-					"adventurers" : [Adventurers, Adventurers_csv, ["get_name", "get_health", "get_max_health", "get_cr", "get_alive", "get_heal_capacity", "get_party"]],
+					"adventurers" : [Adventurers, Adventurers_csv, ["get_name", "get_health", "get_max_health", "get_cr", "get_alive", "get_heal_capacity", "get_party", "get_resting_place"]],
 					"mainParty" : [Party, MainParty_csv, ["get_name", "get_description", "get_room", "get_side", "get_alive"]]}
 		self.dungeon = {}
 		
@@ -77,11 +77,11 @@ class File:
 		
 		room_dic = {}
 		path_dic = {}
-		Adventurers_csv = {}
+		Adventurers_dic = {}
 
 		for x in party_dic:
 			for adventurer in party_dic[x].get_adventurers():
-				Adventurers_csv[adventurer] = party_dic[x].get_adventurers()[adventurer]
+				Adventurers_dic[adventurer] = party_dic[x].get_adventurers()[adventurer]
 
 
 		for x in position_dic:
@@ -95,7 +95,7 @@ class File:
 		self.dungeon = {"path" : path_dic, 
 						"room" : room_dic,
 						"party" : party_dic,
-						"adventurers" : Adventurers_csv,
+						"adventurers" : Adventurers_dic,
 						"mainParty" : main_party_dic
 						}
 
@@ -113,6 +113,6 @@ class File:
 					
 					print(entity)
 					object = [getattr(self.dungeon[class_][entity], method)() for method in self.dic[class_][2]]
-					data[object[0]] = dict(zip(keys, object[1:]))
+					data[object[0]] = dict(zip(keys, object[0:]))
 
 				json.dump(data, j)

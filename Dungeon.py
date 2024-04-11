@@ -138,10 +138,12 @@ def create_encounters_diccionary(main_party, partys):
 		else:
 			encounters[position] = {partys[x].get_name() : partys[x]}
 	return encounters
+
 def calculate_status(positions, main_party, partys):
 	
 	encounters = create_encounters_diccionary(main_party, partys)
 	confrontation_outcomes(encounters, main_party,  partys, positions)
+
 def other_party_movement(positions, partys):
 	
 	for p_name in partys:
@@ -198,8 +200,8 @@ def enter_dungeon(positions, partys, main_party):
 		dungeon_logger.add_travel_history(travel, main_party.get_name())
 		
 		other_party_movement(positions, partys)
-		#calculate_status(positions, main_party , partys)
-		dungeon_logger
+		calculate_status(positions, main_party , partys)
+		#dungeon_logger.resolve_round()
 
 """
 ====================================================================================================

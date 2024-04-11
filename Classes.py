@@ -86,13 +86,21 @@ class Entity:
 		self.alive = alive
 
 class Adventurers(Entity):
-	def __init__(self, name, health, max_health, cr, alive, heal_capacity, party):
+	def __init__(self, name, health, max_health, cr, alive, heal_capacity, party, resting_place):
 		super().__init__(name, alive)
 		self.health = health
 		self.max_health = max_health
 		self.cr = cr
 		self.heal_capacity = heal_capacity
 		self.party = party
+		self.resting_place = resting_place
+		
+	def killed(self, resting_place):
+		self.restin_place = resting_place
+		self.set_alive(False)
+
+	def get_resting_place(self):
+		return self.resting_place
 
 	def get_heal_capacity(self):
 		return self.heal_capacity
@@ -112,11 +120,11 @@ class Adventurers(Entity):
 	def get_cr(self):
 		return self.cr
 
-	def deal_damage(self, damage):
+	def deal_damage(self, damage, resting_place):
 		if self.get_alive():
 			if self.health - damage <= 0:
 				self.health = 0 
-				self.set_alive(False)
+				self.killed(resting_place)
 			else:
 				self.health -= damage
 	
@@ -168,21 +176,6 @@ class Party(Entity):
 	def set_side(self, side):
 		self.side = side
 	
-	def select_character_random(self):
-
-		alive_characters = [x for x in self.adventurers.keys() if self.adventurers[x].get_alive() == True]
-
-		if len(alive_characters) == 0:
-			return None
-		character = random.choice(list(self.get_adventurers.keys()))
-		return self.get_adventurers(character)
-
-	def status(self):
-		print("the party is alive {}".format(self.alive))
-		print("the party has {}".format(self.adventurers))
-		return 1
-
-
 	def travel(self, new_place):
 		self.room = new_place
 		return new_place
@@ -191,3 +184,24 @@ class Party(Entity):
 		print("entre")
 		print(Rooms)
 		self.set_room(random.choice(Rooms))
+
+	def calculate_damage(self):
+		damage = 0
+		for x in self.adventurers:
+			damage += self.adventurers[x].get_cr()
+		return damage
+	
+	def get_adventurers_alive(self):
+		return [self.adventurers[x] for x in self.adventurers if self.adventurers[x].get_alive()] 
+
+	def distribute_damage(self, damage, resting_place):
+		alive = self.get_adventurers_alive()
+		distributed_damage = damage // len(alive)
+		dead = []
+		for x in alive:
+			x.deal_damage(distributed_damage)
+			if not x.get_alive():
+				dead.append(x.get_name())
+		if len(dead) == len(alive):
+			self.set_alive(False)
+		return dead

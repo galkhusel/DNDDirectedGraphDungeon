@@ -4,7 +4,8 @@
     "cr" : 10,
     "alive" : false , 
     "heal_capacity" : 20,
-    "party" : "party1"
+    "party" : "party1", 
+    "resting_place": "null"
     },
 "ANDREI" : {
     "health" : 70,
@@ -12,6 +13,7 @@
     "cr" : 20,
     "alive" : true , 
     "heal_capacity" : 30,
-    "party" : "party2"
+    "party" : "party2",
+    "resting_place" : "null"
     }
 }
